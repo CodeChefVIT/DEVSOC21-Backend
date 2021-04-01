@@ -281,3 +281,31 @@ exports.finalise = async (req, res) => {
     });
   }
 };
+
+
+exports.getTeamByUser = async(req,res)=>{
+  const { userId } = req.user;
+  const {team} = await User.findById(userId)
+  if(team){
+  Team.findById(team)
+    .populate({ path: "leader", select: "name -_id" })
+    .populate({ path: "users", select: "name email -_id" })
+    .select(" -updatedAt -__v ")
+    .then((teams) => {
+      res.status(200).json({
+        teams,
+      });
+    })
+    .catch((e) => {
+      res.status(400).json({
+        error: e.toString(),
+      });
+    });
+  }
+  else{
+    return res.status(203).json({
+      message:"Not in a team"
+    })
+  }
+}
+
