@@ -38,7 +38,7 @@ app.use("/uploads", express.static("./public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(logResponseBody);
+// app.use(logResponseBody);
 
 // Allow CORS
 app.use((req, res, next) => {
@@ -72,6 +72,9 @@ app.use(cors());
 // }
 
 // ADD ROUTERS
+app.use("/auth", require("./config/googleAuth"));
+app.use("/team", require("./api/routers/team"));
+// app.use("/user", require("./api/routers/user"));
 // ROUTERS END
 
 app.get("/checkServer", (req, res) => {
