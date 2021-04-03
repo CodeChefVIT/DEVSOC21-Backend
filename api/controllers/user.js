@@ -21,7 +21,34 @@ exports.update = async (req, res) => {
 
 exports.getProfile = async (req, res)=>{
   const { userId } = req.user;
-  let user = await User.findById(userId)
+  let user = await User.aggregate(
+    [
+      {
+        $match : { _id: { $eq: mongoose.Types.ObjectId(userId) } },
+      },
+      {
+        $lookup: {
+          from: "teams",
+          localField: "team",
+          foreignField: "_id",
+          as: "team",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          email: 1,
+          mobile: 1,
+          college: 1,
+          avatar: 1,
+          bio: 1,
+          "team._id": 1,
+          "team.name": 1,
+          "team.code": 1,
+        },
+      },
+    ]
   )
     if(user){
       user = Object(user[0])
