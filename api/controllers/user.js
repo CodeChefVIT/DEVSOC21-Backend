@@ -43,6 +43,7 @@ exports.getProfile = async (req, res)=>{
           college: 1,
           avatar: 1,
           bio: 1,
+          inTeam: 1,
           "team._id": 1,
           "team.name": 1,
           "team.code": 1,
