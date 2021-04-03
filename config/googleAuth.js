@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const express = require("express");
 const mongoose = require("mongoose");
-const cookieParser = npmrequire("cookie-parser");
+const cookieParser = require("cookie-parser");
 const User = require("../api/models/user");
 
 const router = express.Router();
