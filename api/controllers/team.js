@@ -1,6 +1,7 @@
 const Team = require("../models/team");
 const User = require("../models/user");
 const mongoose = require("mongoose");
+const user = require("../models/user");
 
 exports.make = async (req, res) => {
   const { name } = req.body;
@@ -57,28 +58,28 @@ exports.make = async (req, res) => {
                           });
                         })
                         .catch((e) => {
-                          res.status(400).json({
+                          res.status(500).json({
                             error: e.toString(),
                           });
                         });
                     });
                   })
                   .catch((e) => {
-                    res.status(400).json({
+                    res.status(500).json({
                       error: e.toString(),
                     });
                   });
               }
             })
             .catch((e) => {
-              res.status(400).json({
+              res.status(500).json({
                 error: e.toString(),
               });
             });
         }
       })
       .catch((e) => {
-        res.status(400).json({
+        res.status(500).json({
           error: e.toString(),
         });
       });
@@ -125,27 +126,27 @@ exports.join = async (req, res) => {
                         });
                       })
                       .catch((e) => {
-                        res.status(400).json({
+                        res.status(500).json({
                           error: e.toString(),
                         });
                       });
                   })
                   .catch((e) => {
-                    res.status(400).json({
+                    res.status(500).json({
                       error: e.toString(),
                     });
                   });
               }
             })
             .catch((e) => {
-              res.status(400).json({
+              res.status(500).json({
                 error: e.toString(),
               });
             });
         }
       })
       .catch((e) => {
-        res.status(400).json({
+        res.status(500).json({
           error: e.toString(),
         });
       });
@@ -178,20 +179,20 @@ exports.leave = async (req, res) => {
                 });
               })
               .catch((e) => {
-                res.status(400).json({
+                res.status(500).json({
                   error: e.toString(),
                 });
               });
           })
           .catch((e) => {
-            res.status(400).json({
+            res.status(500).json({
               error: e.toString(),
             });
           });
       }
     })
     .catch((e) => {
-      res.status(400).json({
+      res.status(500).json({
         error: e.toString(),
       });
     });
@@ -208,7 +209,7 @@ exports.displayAll = async (req, res) => {
       });
     })
     .catch((e) => {
-      res.status(400).json({
+      res.status(500).json({
         error: e.toString(),
       });
     });
@@ -226,7 +227,7 @@ exports.displayOne = async (req, res) => {
       });
     })
     .catch((e) => {
-      res.status(400).json({
+      res.status(500).json({
         error: e.toString(),
       });
     });
@@ -245,7 +246,7 @@ exports.update = async (req, res) => {
       });
     })
     .catch((e) => {
-      res.status(400).json({
+      res.status(500).json({
         error: e.toString(),
       });
     });
@@ -292,12 +293,17 @@ exports.getTeamByUser = async(req,res)=>{
     .populate({ path: "users", select: "name email -_id" })
     .select(" -updatedAt -__v ")
     .then((teams) => {
+      let isLeader = false;
+      if(team.leader == userId){
+        isLeader = true
+      }
       res.status(200).json({
         teams,
+        isLeader
       });
     })
     .catch((e) => {
-      res.status(400).json({
+      res.status(500).json({
         error: e.toString(),
       });
     });
@@ -309,3 +315,39 @@ exports.getTeamByUser = async(req,res)=>{
   }
 }
 
+
+exports.removeUser = async(req, res)=>{
+  const { userId } = req.user;
+  const { remove, teamId } = req.body;
+  const team = await Team.findById(teamId);
+  if(!team){
+    return res.status(404).json({
+      success: false,
+      message: "Team not found"
+    })
+  }else{
+    //Check leader
+    if(team.leader != userId){
+      return res.status(404).json({
+        success: false,
+        message: "you are not the leader, ass"
+      })
+    }else{
+      await Team.findOneAndUpdate(
+        { _id: teamId },
+        { $pull: { users: remove } },
+        { new: true }
+      ).then((result)=>{
+        return res.status(200).json({
+          success: true,
+          message: "User removed"
+        })
+      }).catch((err)=>{
+        return res.status(500).json({
+          success: false,
+          message: "Server error"
+        })
+      })
+    }
+  }
+}

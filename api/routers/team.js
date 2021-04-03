@@ -17,5 +17,8 @@ router.patch("toggleFinalised", checkAuth, team.finalise);
 
 router.patch("/update", checkAuth, team.update);
 
-router.get("/user",checkAuth,team.getTeamByUser)
+router.get("/user",checkAuth,team.getTeamByUser);
+
+router.post("/removeUser",checkAuth,team.removeUser);
+
 module.exports = router;
