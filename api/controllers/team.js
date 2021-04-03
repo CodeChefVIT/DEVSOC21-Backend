@@ -162,33 +162,97 @@ exports.leave = async (req, res) => {
           message: "You don't have any friends, get a life",
         });
       } else {
-        Team.findOneAndUpdate(
-          { _id: user.team },
-          { $pull: { users: userId } },
-          { new: true }
-        )
-          .then(async (team) => {
-            if (team.users.length == 0) {
-              await Team.deleteOne({ _id: user.team });
-            }
-
-            await User.updateOne({ _id: userId }, { team: null, inTeam: false })
-              .then(() => {
-                res.status(200).json({
-                  message: "Left team successfully",
-                });
+        const current = await Team.findById(user.team)
+          if(current.users.length==1){
+            Team.findOneAndUpdate(
+              { _id: user.team },
+              { $pull: { users: userId } },
+              { new: true }
+            )
+              .then(async (team) => {
+                if (team.users.length == 0) {
+                  await Team.deleteOne({ _id: user.team });
+                }
+    
+                await User.updateOne({ _id: userId }, { team: null, inTeam: false })
+                  .then(() => {
+                    return res.status(200).json({
+                      message: "Left team successfully",
+                    });
+                  })
+                  .catch((e) => {
+                    return res.status(500).json({
+                      error: e.toString(),
+                    });
+                  });
               })
               .catch((e) => {
-                res.status(500).json({
+                return res.status(500).json({
                   error: e.toString(),
                 });
               });
-          })
-          .catch((e) => {
-            res.status(500).json({
-              error: e.toString(),
+          }
+        // 
+          else if(current.leader==userId){
+            {
+            Team.findOneAndUpdate(
+              { _id: user.team },
+              { $pull: { users: userId } },
+              { new: true }
+            )
+              .then(async (team) => {
+                if (team.users.length != 0) {
+                  await Team.updateOne({ _id: user.team },{leader:team.users[0]});
+                }
+    
+                await User.updateOne({ _id: userId }, { team: null, inTeam: false })
+                  .then(() => {
+                   return res.status(200).json({
+                      message: "Left team successfully",
+                    });
+                  })
+                  .catch((e) => {
+                   return res.status(500).json({
+                      error: e.toString(),
+                    });
+                  });
+              })
+              .catch((e) => {
+               return res.status(500).json({
+                  error: e.toString(),
+                });
+              });
+          }
+        }else{
+          Team.findOneAndUpdate(
+            { _id: user.team },
+            { $pull: { users: userId } },
+            // { new: true }
+          )
+            .then(async () => {
+              // if (team.users.length == 0) {
+              //   await Team.deleteOne({ _id: user.team });
+              // }
+  
+              await User.updateOne({ _id: userId }, { team: null, inTeam: false })
+                .then(() => {
+                  return res.status(200).json({
+                    message: "Left team successfully",
+                  });
+                })
+                .catch((e) => {
+                  return res.status(500).json({
+                    error: e.toString(),
+                  });
+                });
+            })
+            .catch((e) => {
+              return res.status(500).json({
+                error: e.toString(),
+              });
             });
-          });
+        }
+
       }
     })
     .catch((e) => {

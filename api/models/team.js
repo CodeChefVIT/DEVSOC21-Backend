@@ -10,7 +10,14 @@ const teamSchema = mongoose.Schema(
 
     code: { type: String, unique: true },
 
-    idea: { type: String },
+    submission: {
+    name:{type:String},
+    description: { type: String },
+    status:{type:String},
+    techStack:{type:String},
+    link:{type:String},
+    zip:{type:String}
+  },
 
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 
@@ -19,10 +26,7 @@ const teamSchema = mongoose.Schema(
       default: "",
     },
 
-    submission: {
-      type: String,
-      default: null,
-    },
+    
     finalised: { type: Boolean, default: false },
   },
   { timestamps: true }
