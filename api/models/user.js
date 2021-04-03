@@ -23,7 +23,30 @@ const userSchema = mongoose.Schema(
 
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
 
-    resume: { type: String },
+    address: {
+      line1: { type: String },
+      line2: { type: String },
+      pincode: { type: Number },
+      city: { type: String },
+      state: { type: String },
+      country: { type: String },
+    },
+    personal: {
+      github: { type: String },
+
+      linkedin: { type: String },
+  
+      discord: {
+        nickname: { type: String },
+        hash: { type: String },
+      },
+  
+      website: { type: String },
+
+      tshirt: { type: String, enum: ["S", "M", "L", "XL"] },
+
+      resume: { type: String },
+    },
 
     isCheckedIn: { type: Boolean },
 
