@@ -25,7 +25,6 @@ const getGoogleAuthURL = () => {
   const scopes = [
     "https://www.googleapis.com/auth/userinfo.profile",
     "https://www.googleapis.com/auth/userinfo.email",
-    "https://www.googleapis.com/auth/user.phonenumbers.read",
     "openid",
   ];
 
@@ -77,10 +76,7 @@ router.get("/google", async (req, res) => {
       .save()
       .then((user) => {
         console.log("hllo")
-        res.status(200).json({
-          user,
-          token,
-        });
+        res.redirect(`${process.env.REDIRECT_FRONTEND}${token}`)
       })
       .catch((err) => {
         res.status(200).json({
@@ -112,10 +108,7 @@ router.get("/google", async (req, res) => {
           }
         );
         console.log("hllo")
-        res.status(200).json({
-          user,
-          token,
-        });
+        res.redirect(`${process.env.REDIRECT_FRONTEND}${token}`)
       })
       .catch((err) => {
         res.status(200).json({
