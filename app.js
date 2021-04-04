@@ -11,8 +11,11 @@ var morgan = require("morgan");
 const database = require("./config/database");
 
 const logResponseBody = require("./utils/logResponse");
+const Like = require("./api/models/like");
 
-var app = express();
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 app.use(morgan("combined"));
 app.set("trust proxy", 1);
@@ -103,11 +106,49 @@ app.use((error, req, res, next) => {
   });
 });
 
+//sockets
+
+//to keep connection alive
+function sendHeartbeat(){
+	setTimeout(sendHeartbeat, 8000);
+	io.sockets.emit('ping', { beat : 1 });
+}
+
+io.on("connection", (sc) => {
+	console.log(`Socket ${sc.id} connected.`);
+
+	io.sockets.emit('connect',`Socket ${sc.id} connected.`)
+	sc.on('pong', function(data){
+		console.log("Pong received from client");
+});
+  sc.on('disconnect', () => {
+    console.log(`Socket ${sc.id} disconnected.`);
+  });
+
+	sc.on("like", async (userId,teamId) => {
+
+	await Like.updateOne({teamId},{$addToSet:{likes:userId}},{new:true}).then((result)=>{
+		// console.log(result)
+		io.sockets.emit('count',{teamId:result.likes.length})
+	}).catch((e)=>{
+		console.log(e.toString())
+	})
+	
+
+	});
+
+
+	
+setTimeout(sendHeartbeat, 8000);
+
+});
+
 const PORT = process.env.PORT || 3000;
 
 //Start the server
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
+http.listen(PORT, function(){
+	console.log(`listening on *:${PORT}`);
 });
 
-module.exports = app;
+
+// module.exports = app;
