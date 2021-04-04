@@ -68,7 +68,7 @@ router.get("/google", async (req, res) => {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: "24h",
+        expiresIn: "30d",
       }
     );
     user.login_count += 1;
@@ -104,7 +104,7 @@ router.get("/google", async (req, res) => {
           },
           process.env.JWT_SECRET,
           {
-            expiresIn: "24h",
+            expiresIn: "30d",
           }
         );
         console.log("hllo")
