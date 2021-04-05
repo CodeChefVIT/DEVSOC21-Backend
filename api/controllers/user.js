@@ -73,7 +73,7 @@ exports.getProfile = async (req, res) => {
       user,
     });
   } else {
-    req.status(404).json({
+    res.status(404).json({
       success: false,
       message: "Does not exist",
     });
@@ -85,12 +85,18 @@ exports.sendInvite = async (req, res) => {
   const { userId } = req.user;
   const team = await Team.findById(teamId);
   if (!team || team.leader != userId) {
-    req.status(404).json({
+    res.status(404).json({
       success: false,
       message: "Does not exist",
     });
   } else {
     const user = await User.findOne({ email: inviteEmail });
+    if(user.inTeam){
+      res.status(403).json({
+        success: false,
+        message: "already in a team",
+      });
+    }
     if (user) {
       const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${true}`;
       await Team.updateOne(
@@ -114,7 +120,7 @@ exports.sendInvite = async (req, res) => {
           });
         })
         .catch((err) => {
-          req.status(500).json({
+          res.status(500).json({
             success: false,
             message: "server error",
           });
@@ -142,7 +148,7 @@ exports.sendInvite = async (req, res) => {
           });
         })
         .catch((err) => {
-          req.status(500).json({
+          res.status(500).json({
             success: false,
             message: "server error",
           });
@@ -228,7 +234,7 @@ exports.cancelInvite = async (req, res) => {
   const { userId } = req.user;
   const team = await Team.findById(teamId);
   if (!team || team.leader != userId) {
-    req.status(404).json({
+    res.status(404).json({
       success: false,
       message: "Does not exist",
     });
@@ -247,7 +253,7 @@ exports.cancelInvite = async (req, res) => {
       });
     })
     .catch((err) => {
-      req.status(500).json({
+      res.status(500).json({
         success: false,
         message: "server error",
       });
