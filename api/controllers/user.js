@@ -187,7 +187,7 @@ exports.join = async (req, res) => {
               } else {
                 Team.findOneAndUpdate(
                   { code: code },
-                  { $addToSet: { users: userId } },
+                  { $addToSet: { users: user._id } },
                   { $pull: { invitedTeammates: inviteEmail } },
                   { new: true }
                 )
