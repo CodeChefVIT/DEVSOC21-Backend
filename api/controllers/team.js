@@ -401,10 +401,22 @@ exports.removeUser = async(req, res)=>{
         { _id: teamId },
         { $pull: { users: remove } },
         { new: true }
-      ).then((result)=>{
-        return res.status(200).json({
-          success: true,
-          message: "User removed"
+      ).then(async (result)=>{
+        await User.updateOne({
+          _id: remove
+        },{
+          inTeam: false,
+          team:null
+        }).then((result)=>{
+          return res.status(200).json({
+            success: true,
+            message: "User removed"
+          })
+        }).catch((err)=>{
+          return res.status(500).json({
+            success: false,
+            message: "Server error"
+          })
         })
       }).catch((err)=>{
         return res.status(500).json({
