@@ -264,8 +264,8 @@ exports.leave = async (req, res) => {
 
 exports.displayAll = async (req, res) => {
   Team.find({})
-    .populate({ path: "leader", select: "_id name -_id" })
-    .populate({ path: "users", select: "_id name email -_id" })
+    .populate({ path: "leader", select: "_id name" })
+    .populate({ path: "users", select: "_id name email" })
     .select("-code -idea -avatar -submission -updatedAt -__v ")
     .then((teams) => {
       res.status(200).json({
@@ -282,8 +282,8 @@ exports.displayAll = async (req, res) => {
 exports.displayOne = async (req, res) => {
   const { teamId } = req.body;
   Team.findById(teamId)
-  .populate({ path: "leader", select: "_id name -_id" })
-  .populate({ path: "users", select: "_id name email -_id" })
+  .populate({ path: "leader", select: "_id name" })
+  .populate({ path: "users", select: "_id name email" })
     .select(" -updatedAt -__v ")
     .then((teams) => {
       res.status(200).json({
@@ -353,8 +353,8 @@ exports.getTeamByUser = async(req,res)=>{
   const {team} = await User.findById(userId)
   if(team){
   Team.findById(team)
-  .populate({ path: "leader", select: "_id name -_id" })
-  .populate({ path: "users", select: "_id name email -_id" })
+  .populate({ path: "leader", select: "_id name" })
+  .populate({ path: "users", select: "_id name email" })
     .select(" -updatedAt -__v ")
     .then((teams) => {
       let isLeader = false;
