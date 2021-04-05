@@ -396,7 +396,14 @@ exports.removeUser = async(req, res)=>{
         success: false,
         message: "you are not the leader, ass"
       })
-    }else{
+    }
+    else if(team.leader == remove){
+      return res.status(407).json({
+        success: false,
+        message: "You cannot leave the team"
+      })
+    }
+    else{
       await Team.findOneAndUpdate(
         { _id: teamId },
         { $pull: { users: remove } },
