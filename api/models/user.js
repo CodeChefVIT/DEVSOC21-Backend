@@ -33,14 +33,11 @@ const userSchema = mongoose.Schema(
     },
     personal: {
       github: { type: String },
-
       linkedin: { type: String },
-  
       discord: {
         nickname: { type: String },
         hash: { type: String },
       },
-  
       website: { type: String },
 
       tshirt: { type: String, enum: ["S", "M", "L", "XL"] },
