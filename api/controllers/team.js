@@ -358,7 +358,8 @@ exports.getTeamByUser = async(req,res)=>{
     .select(" -updatedAt -__v ")
     .then((teams) => {
       let isLeader = false;
-      if(team.leader == userId){
+      console.log(teams.leader._id, userId)
+      if(teams.leader._id == userId){
         isLeader = true
       }
       res.status(200).json({
