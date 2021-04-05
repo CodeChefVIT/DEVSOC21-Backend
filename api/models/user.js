@@ -17,32 +17,31 @@ const userSchema = mongoose.Schema(
       default: "",
     },
 
-    college: { type: String },
+    college: { type: String, default: "" },
 
-    bio: { type: String },
+    bio: { type: String, default: ""  },
 
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
 
     address: {
-      line1: { type: String },
-      line2: { type: String },
+      line1: { type: String, default: ""  },
+      line2: { type: String, default: ""  },
       pincode: { type: Number },
-      city: { type: String },
-      state: { type: String },
-      country: { type: String },
+      city: { type: String, default: ""  },
+      state: { type: String, default: ""  },
+      country: { type: String, default: ""  },
     },
     personal: {
-      github: { type: String },
-      linkedin: { type: String },
+      github: { type: String, default: "" g },
       discord: {
-        nickname: { type: String },
-        hash: { type: String },
+        nickname: { type: String, default: ""  },
+        hash: { type: String, default: ""  },
       },
-      website: { type: String },
+      website: { type: String, default: ""  },
 
       tshirt: { type: String, enum: ["S", "M", "L", "XL"] },
 
-      resume: { type: String },
+      resume: { type: String, default: ""  },
     },
 
     isCheckedIn: { type: Boolean },
