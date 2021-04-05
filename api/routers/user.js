@@ -9,4 +9,8 @@ router.get("/getProfile",checkAuth, user.getProfile);
 
 router.post('/sendInvite',checkAuth, user.sendInvite);
 
+router.post('/joinInvite', user.join);
+
+router.patch('/cancelInvite', checkAuth, user.cancelInvite)
+
 module.exports = router;

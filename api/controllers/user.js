@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const Team = require("../models/team");
 const mongoose = require("mongoose");
-const { sendEmail } = require('../../config/emailScript')
+const { sendEmail } = require("../../config/emailScript");
 
 exports.update = async (req, res) => {
   const { userId } = req.user;
@@ -20,105 +20,223 @@ exports.update = async (req, res) => {
     });
 };
 
-
-exports.getProfile = async (req, res)=>{
+exports.getProfile = async (req, res) => {
   const { userId } = req.user;
-  let user = await User.aggregate(
-    [
-      {
-        $match : { _id: { $eq: mongoose.Types.ObjectId(userId) } },
+  let user = await User.aggregate([
+    {
+      $match: { _id: { $eq: mongoose.Types.ObjectId(userId) } },
+    },
+    {
+      $lookup: {
+        from: "teams",
+        localField: "team",
+        foreignField: "_id",
+        as: "team",
       },
-      {
-        $lookup: {
-          from: "teams",
-          localField: "team",
-          foreignField: "_id",
-          as: "team",
-        },
+    },
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        email: 1,
+        mobile: 1,
+        college: 1,
+        avatar: 1,
+        bio: 1,
+        inTeam: 1,
+        "team._id": 1,
+        "team.name": 1,
+        "team.code": 1,
       },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          email: 1,
-          mobile: 1,
-          college: 1,
-          avatar: 1,
-          bio: 1,
-          inTeam: 1,
-          "team._id": 1,
-          "team.name": 1,
-          "team.code": 1,
-        },
-      },
-    ]
-  )
-    if(user){
-      user = Object(user[0])
-      if(user.team && user.team.length >=1){
-        user.team = user.team[0]
-      }
-      res.status(200).json({
-        success: true,
-        user
-      })
-    }else{
-      req.status(404).json({
-        success: false,
-        message: "Does not exist"
-      })
+    },
+  ]);
+  if (user) {
+    user = Object(user[0]);
+    if (user.team && user.team.length >= 1) {
+      user.team = user.team[0];
     }
-}
-
-exports.sendInvite = async( req, res)=>{
-  const {inviteEmail, teamId }= req.body;
-  const { userId } = req.user;
-  const team = await Team.findById(teamId);
-  if(!team || team.leader != userId){
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } else {
     req.status(404).json({
       success: false,
-      message: "Does not exist"
-    })
-  }else {
-    const user = await User.findOne({email: inviteEmail})
-    if(user){
-      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${true}`
-      await Team.updateOne({
-        _id: teamId
-      },{
-        $addToSet: { invitedTeammates: inviteEmail }
-      }).then(async(result)=>{
-        console.log(text)
-        await sendEmail('events@codechefvit.com', inviteEmail, 'Invite to team', text)
-        return res.status(200).json({
-          success: true,
-        })
-      }).catch((err)=>{
-        req.status(500).json({
-          success: false,
-          message: "Does not exist"
-        })
-      })
+      message: "Does not exist",
+    });
+  }
+};
 
-    }else{
-      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${false}`
-      console.log(text)
-      await Team.updateOne({
-        _id: teamId
-      },{
-        $addToSet: { invitedTeammates: inviteEmail }
-      }).then(async (result)=>{
-        await sendEmail('events@codechefvit.com', inviteEmail, 'Invite to team', text)
-        return res.status(200).json({
-          success: true,
+exports.sendInvite = async (req, res) => {
+  const { inviteEmail, teamId } = req.body;
+  const { userId } = req.user;
+  const team = await Team.findById(teamId);
+  if (!team || team.leader != userId) {
+    req.status(404).json({
+      success: false,
+      message: "Does not exist",
+    });
+  } else {
+    const user = await User.findOne({ email: inviteEmail });
+    if (user) {
+      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${true}`;
+      await Team.updateOne(
+        {
+          _id: teamId,
+        },
+        {
+          $addToSet: { invitedTeammates: inviteEmail },
+        }
+      )
+        .then(async (result) => {
+          console.log(text);
+          await sendEmail(
+            "events@codechefvit.com",
+            inviteEmail,
+            "Invite to team",
+            text
+          );
+          return res.status(200).json({
+            success: true,
+          });
         })
-      }).catch((err)=>{
-        req.status(500).json({
-          success: false,
-          message: "Does not exist"
+        .catch((err) => {
+          req.status(500).json({
+            success: false,
+            message: "server error",
+          });
+        });
+    } else {
+      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${false}`;
+      console.log(text);
+      await Team.updateOne(
+        {
+          _id: teamId,
+        },
+        {
+          $addToSet: { invitedTeammates: inviteEmail },
+        }
+      )
+        .then(async (result) => {
+          await sendEmail(
+            "events@codechefvit.com",
+            inviteEmail,
+            "Invite to team",
+            text
+          );
+          return res.status(200).json({
+            success: true,
+          });
         })
-      })
-
+        .catch((err) => {
+          req.status(500).json({
+            success: false,
+            message: "server error",
+          });
+        });
     }
   }
-}
+};
+
+exports.join = async (req, res) => {
+  const { code, email } = req.body;
+
+  const team = await Team.findOne({ code });
+  if(team && !team.invitedTeammates.includes(email)){
+    return res.status(405).json({
+      message: "Uninvited",
+    });
+  }
+  if (!team) {
+    return res.status(404).json({
+      message: "Team not found",
+    });
+  } else {
+    User.findOne({ email })
+      .then((user) => {
+        if (user.inTeam) {
+          return res.status(403).json({
+            message: "Already in a team",
+          });
+        } else {
+          Team.findOne({ code })
+            .then((team) => {
+              if (team.users.length >= 5) {
+                return res.status(403).json({
+                  message: "Team length full",
+                });
+              } else {
+                Team.findOneAndUpdate(
+                  { code: code },
+                  { $addToSet: { users: userId } },
+                  { $pull: { invitedTeammates: inviteEmail } },
+                  { new: true }
+                )
+                  .then((team) => {
+                    User.updateOne(
+                      { email: email },
+                      { inTeam: true, team: team._id }
+                    )
+                      .then(() => {
+                        res.status(201).json({
+                          message: "Successfully joined team",
+                        });
+                      })
+                      .catch((e) => {
+                        res.status(500).json({
+                          error: e.toString(),
+                        });
+                      });
+                  })
+                  .catch((e) => {
+                    res.status(500).json({
+                      error: e.toString(),
+                    });
+                  });
+              }
+            })
+            .catch((e) => {
+              res.status(500).json({
+                error: e.toString(),
+              });
+            });
+        }
+      })
+      .catch((e) => {
+        res.status(500).json({
+          error: e.toString(),
+        });
+      });
+  }
+};
+
+exports.cancelInvite = async (req, res) => {
+  const { inviteEmail, teamId } = req.body;
+  const { userId } = req.user;
+  const team = await Team.findById(teamId);
+  if (!team || team.leader != userId) {
+    req.status(404).json({
+      success: false,
+      message: "Does not exist",
+    });
+  }
+  await Team.updateOne(
+    {
+      _id: teamId,
+    },
+    {
+      $pull: { invitedTeammates: inviteEmail },
+    }
+  )
+    .then(async (result) => {
+      return res.status(200).json({
+        success: true,
+      });
+    })
+    .catch((err) => {
+      req.status(500).json({
+        success: false,
+        message: "server error",
+      });
+    });
+};

@@ -12,14 +12,14 @@ exports.make = async (req, res) => {
     });
   } else {
     User.findById(userId)
-      .then((user) => {
+      .then(async (user) => {
         console.log(user);
         if (user.inTeam) {
           return res.status(403).json({
             message: "Already in a team",
           });
         } else {
-          Team.findOne({ name })
+          await Team.findOne({ name })
             .then((team) => {
               if (team) {
                 return res.status(403).json({
@@ -90,7 +90,7 @@ exports.join = async (req, res) => {
   const { code } = req.body;
   const { userId } = req.user;
 
-  const team = Team.findOne({ code });
+  const team = await Team.findOne({ code });
   if (!team) {
     return res.status(404).json({
       message: "Team not found",
