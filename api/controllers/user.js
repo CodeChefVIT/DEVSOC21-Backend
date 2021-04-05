@@ -89,7 +89,12 @@ exports.sendInvite = async (req, res) => {
       success: false,
       message: "Does not exist",
     });
-  } else {
+  } else if (team && team.invitedTeammates.includes(inviteEmail)){
+    res.status(410).json({
+      success: false,
+      message: "User already invited",
+    });
+  }else {
     const user = await User.findOne({ email: inviteEmail });
     if (user.inTeam) {
       res.status(403).json({
