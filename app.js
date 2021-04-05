@@ -133,12 +133,7 @@ io.on("connection", (sc) => {
 	}).catch((e)=>{
 		console.log(e.toString())
 	})
-	
-
 	});
-
-
-	
 setTimeout(sendHeartbeat, 8000);
 
 });
@@ -147,7 +142,7 @@ const PORT = process.env.PORT || 3000;
 
 //Start the server
 http.listen(PORT, function(){
-	console.log(`listening on *:${PORT}`);
+	console.log(`listening on PORT: ${PORT}`);
 });
 
 

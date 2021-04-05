@@ -1,5 +1,7 @@
 const User = require("../models/user");
+const Team = require("../models/team");
 const mongoose = require("mongoose");
+const { sendEmail } = require('../../config/emailScript')
 
 exports.update = async (req, res) => {
   const { userId } = req.user;
@@ -66,4 +68,57 @@ exports.getProfile = async (req, res)=>{
         message: "Does not exist"
       })
     }
+}
+
+exports.sendInvite = async( req, res)=>{
+  const {inviteEmail, teamId }= req.body;
+  const { userId } = req.user;
+  const team = await Team.findById(teamId);
+  if(!team || team.leader != userId){
+    req.status(404).json({
+      success: false,
+      message: "Does not exist"
+    })
+  }else {
+    const user = await User.findOne({email: inviteEmail})
+    if(user){
+      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${true}`
+      await Team.updateOne({
+        _id: teamId
+      },{
+        $addToSet: { invitedTeammates: inviteEmail }
+      }).then(async(result)=>{
+        console.log(text)
+        await sendEmail('events@codechefvit.com', inviteEmail, 'Invite to team', text)
+        return res.status(200).json({
+          success: true,
+        })
+      }).catch((err)=>{
+        req.status(500).json({
+          success: false,
+          message: "Does not exist"
+        })
+      })
+
+    }else{
+      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${false}`
+      console.log(text)
+      await Team.updateOne({
+        _id: teamId
+      },{
+        $addToSet: { invitedTeammates: inviteEmail }
+      }).then(async (result)=>{
+        await sendEmail('events@codechefvit.com', inviteEmail, 'Invite to team', text)
+        return res.status(200).json({
+          success: true,
+        })
+      }).catch((err)=>{
+        req.status(500).json({
+          success: false,
+          message: "Does not exist"
+        })
+      })
+
+    }
+  }
 }

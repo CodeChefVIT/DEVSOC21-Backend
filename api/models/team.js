@@ -26,7 +26,9 @@ const teamSchema = mongoose.Schema(
       default: "",
     },
 
-    
+    invitedTeammates: [
+      { type: String }
+    ],
     finalised: { type: Boolean, default: false },
   },
   { timestamps: true }

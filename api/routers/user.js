@@ -7,4 +7,6 @@ router.patch("/update", checkAuth, user.update);
 
 router.get("/getProfile",checkAuth, user.getProfile);
 
+router.post('/sendInvite',checkAuth, user.sendInvite);
+
 module.exports = router;
