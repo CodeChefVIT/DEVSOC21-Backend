@@ -181,7 +181,7 @@ exports.join = async (req, res) => {
           Team.findOne({ code })
             .then((team) => {
               if (team.users.length >= 5) {
-                return res.status(403).json({
+                return res.status(407).json({
                   message: "Team length full",
                 });
               } else {
