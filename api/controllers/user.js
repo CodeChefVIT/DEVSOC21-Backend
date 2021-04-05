@@ -36,25 +36,25 @@ exports.getProfile = async (req, res) => {
     },
     {
       $project: {
-        name:1,
-        googleId:1,
-        email:1,
+        name: 1,
+        googleId: 1,
+        email: 1,
         mobile: 1,
-        avatar:1 ,
+        avatar: 1,
         college: 1,
         bio: 1,
-        'address.line1': 1,
-        'address.line2': 1,
-        'address.pincode': 1,
-        'address.city': 1,
-        'address.state': 1,
-        'address.country': 1,
-        'personal.github': 1,
-        'personal.linkedin': 1,
-        'personal.website': 1,
-        'personal.tshirt': 1,
-        'personal.resume': 1,
-        'personal.discord': 1,
+        "address.line1": 1,
+        "address.line2": 1,
+        "address.pincode": 1,
+        "address.city": 1,
+        "address.state": 1,
+        "address.country": 1,
+        "personal.github": 1,
+        "personal.linkedin": 1,
+        "personal.website": 1,
+        "personal.tshirt": 1,
+        "personal.resume": 1,
+        "personal.discord": 1,
         isCheckedIn: 1,
         inTeam: 1,
         "team._id": 1,
@@ -91,14 +91,16 @@ exports.sendInvite = async (req, res) => {
     });
   } else {
     const user = await User.findOne({ email: inviteEmail });
-    if(user.inTeam){
+    if (user.inTeam) {
       res.status(403).json({
         success: false,
         message: "already in a team",
       });
     }
     if (user) {
-      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${true}`;
+      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${
+        team.code
+      }&email=${inviteEmail}&isRegistered=${true}`;
       await Team.updateOne(
         {
           _id: teamId,
@@ -126,7 +128,9 @@ exports.sendInvite = async (req, res) => {
           });
         });
     } else {
-      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${false}`;
+      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${
+        team.code
+      }&email=${inviteEmail}&isRegistered=${false}`;
       console.log(text);
       await Team.updateOne(
         {
@@ -161,7 +165,7 @@ exports.join = async (req, res) => {
   const { code, email } = req.body;
 
   const team = await Team.findOne({ code });
-  if(team && !team.invitedTeammates.includes(email)){
+  if (team && !team.invitedTeammates.includes(email)) {
     return res.status(405).json({
       message: "Uninvited",
     });
@@ -187,8 +191,10 @@ exports.join = async (req, res) => {
               } else {
                 Team.findOneAndUpdate(
                   { code: code },
-                  { $addToSet: { users: user._id } },
-                  { $pull: { invitedTeammates: email } },
+                  {
+                    $addToSet: { users: user._id },
+                    $pull: { invitedTeammates: email },
+                  },
                   { new: true }
                 )
                   .then((team) => {
