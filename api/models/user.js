@@ -32,7 +32,7 @@ const userSchema = mongoose.Schema(
       country: { type: String, default: ""  },
     },
     personal: {
-      github: { type: String, default: "" g },
+      github: { type: String, default: ""  },
       discord: {
         nickname: { type: String, default: ""  },
         hash: { type: String, default: ""  },
