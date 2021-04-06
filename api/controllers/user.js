@@ -96,13 +96,13 @@ exports.sendInvite = async (req, res) => {
     });
   }else {
     const user = await User.findOne({ email: inviteEmail });
-    if (user.inTeam) {
-      res.status(403).json({
-        success: false,
-        message: "already in a team",
-      });
-    }
     if (user) {
+      if (user.inTeam) {
+        return res.status(403).json({
+          success: false,
+          message: "already in a team",
+        });
+      }
       const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${true}`;
       await Team.updateOne(
         {
