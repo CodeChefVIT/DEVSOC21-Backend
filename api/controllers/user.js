@@ -85,6 +85,7 @@ exports.sendInvite = async (req, res) => {
   const { userId } = req.user;
   const team = await Team.findById(teamId);
   if (!team || team.leader != userId) {
+    console.log(team.leader, userid)
     res.status(404).json({
       success: false,
       message: "Does not exist",

@@ -16,7 +16,7 @@ let transporter = nodemailer.createTransport({
 exports.sendEmail = async function (from, to, subject, text) {
   await transporter
     .sendMail({
-      from: from,
+      from: `"CodeChef-VIT" ${from}`,
       to: to,
       subject: subject,
       // html: html,
