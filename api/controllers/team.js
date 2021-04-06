@@ -15,7 +15,7 @@ exports.make = async (req, res) => {
       .then(async (user) => {
         console.log(user);
         if (user.inTeam) {
-          return res.status(403).json({
+          return res.status(404).json({
             message: "Already in a team",
           });
         } else {
@@ -106,7 +106,7 @@ exports.join = async (req, res) => {
           Team.findOne({ code })
             .then((team) => {
               if (team.users.length >= 5) {
-                return res.status(403).json({
+                return res.status(405).json({
                   message: "Team length full",
                 });
               } else {
