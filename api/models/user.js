@@ -42,7 +42,7 @@ const userSchema = mongoose.Schema(
       tshirt: { type: String, enum: ["S", "M", "L", "XL"], default: "L" },
 
       resume: { type: String, default: ""  },
-      linekdin: { type: String, default: ""  },
+      linkedin: { type: String, default: ""  },
     },
 
     isCheckedIn: { type: Boolean },
