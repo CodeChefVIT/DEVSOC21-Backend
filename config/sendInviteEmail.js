@@ -10,6 +10,7 @@ exports.sendInvite = (name, link, code) => {
       <!--<![endif]-->
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
       <style type="text/css">
           #outlook a {
               padding: 0;
@@ -20,6 +21,7 @@ exports.sendInvite = (name, link, code) => {
               padding: 0;
               -webkit-text-size-adjust: 100%;
               -ms-text-size-adjust: 100%;
+              font-family: Montserrat;
           }
   
           table,
@@ -200,7 +202,7 @@ exports.sendInvite = (name, link, code) => {
                                                       <center style="color: #f3f3f3;">
                                                           <a
                                                               href="${link}"><button
-                                                                  style="background: #6E5AFC;color: white;padding: 15px;border: 1px solid #3054FE;border-radius: 5px;cursor: pointer;">Accept
+                                                                  style="background: #6E5AFC;color: white;padding: 15px;border: 1px solid #3054FE;border-radius: 5px;cursor: pointer;font-family: Montserrat;">Accept
                                                                   Invite</button></a>
                                                           <br /><br />
                                                           (or)
