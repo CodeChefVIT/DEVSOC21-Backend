@@ -85,6 +85,12 @@ exports.sendInvite = async (req, res) => {
   const { inviteEmail, teamId } = req.body;
   const { userId } = req.user;
   const team = await Team.findById(teamId);
+  if(team && team.users.length  == 5){
+    return res.status(409).json({
+      success: false,
+      message:"Team is full"
+    })
+  }
   if (!team || team.leader != userId) {
     console.log(team.leader, userid)
     res.status(404).json({
