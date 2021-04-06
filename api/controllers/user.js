@@ -2,6 +2,7 @@ const User = require("../models/user");
 const Team = require("../models/team");
 const mongoose = require("mongoose");
 const { sendEmail } = require("../../config/emailScript");
+const { sendInvite } = require('../../config/sendInviteEmail')
 
 exports.update = async (req, res) => {
   const { userId } = req.user;
@@ -105,6 +106,7 @@ exports.sendInvite = async (req, res) => {
         });
       }
       const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${true}`;
+      const html = sendInvite(req.user.name,text,team.code)
       await Team.updateOne(
         {
           _id: teamId,
@@ -118,8 +120,8 @@ exports.sendInvite = async (req, res) => {
           await sendEmail(
             process.env.SES_EMAIL,
             inviteEmail,
-            "Invite to team",
-            text
+            `Team join invite by ${req.user.name} | DEVSOC 21`,
+            html
           );
           return res.status(200).json({
             success: true,
@@ -133,6 +135,7 @@ exports.sendInvite = async (req, res) => {
         });
     } else {
       const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${false}`;
+      const html = sendInvite(req.user.name,text,team.code)
       console.log(text);
       await Team.updateOne(
         {
@@ -146,8 +149,8 @@ exports.sendInvite = async (req, res) => {
           await sendEmail(
             process.env.SES_EMAIL,
             inviteEmail,
-            "Invite to team",
-            text
+            `Team join invite by ${req.user.name} | DEVSOC 21`,
+            html
           );
           return res.status(200).json({
             success: true,
@@ -157,6 +160,7 @@ exports.sendInvite = async (req, res) => {
           res.status(500).json({
             success: false,
             message: "server error",
+            err: err.toString()
           });
         });
     }

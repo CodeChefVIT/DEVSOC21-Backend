@@ -13,14 +13,14 @@ let transporter = nodemailer.createTransport({
   SES: new aws.SES(),
 });
 
-exports.sendEmail = async function (from, to, subject, text) {
+exports.sendEmail = async function (from, to, subject, html) {
   await transporter
     .sendMail({
       from: `"CodeChef-VIT" ${from}`,
       to: to,
       subject: subject,
-      // html: html,
-      text: text,
+      html: html,
+      // text: text,
       function(err, info) {
         if (err) {
           console.error(err);
