@@ -39,9 +39,10 @@ const userSchema = mongoose.Schema(
       },
       website: { type: String, default: ""  },
 
-      tshirt: { type: String, enum: ["S", "M", "L", "XL"] },
+      tshirt: { type: String, enum: ["S", "M", "L", "XL"], default: "L" },
 
       resume: { type: String, default: ""  },
+      linekdin: { type: String, default: ""  },
     },
 
     isCheckedIn: { type: Boolean },

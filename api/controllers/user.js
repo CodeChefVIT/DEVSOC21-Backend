@@ -103,9 +103,7 @@ exports.sendInvite = async (req, res) => {
       });
     }
     if (user) {
-      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${
-        team.code
-      }&email=${inviteEmail}&isRegistered=${true}`;
+      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${true}`;
       await Team.updateOne(
         {
           _id: teamId,
@@ -117,7 +115,7 @@ exports.sendInvite = async (req, res) => {
         .then(async (result) => {
           console.log(text);
           await sendEmail(
-            "events@codechefvit.com",
+            process.env.SES_EMAIL,
             inviteEmail,
             "Invite to team",
             text
@@ -133,9 +131,7 @@ exports.sendInvite = async (req, res) => {
           });
         });
     } else {
-      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${
-        team.code
-      }&email=${inviteEmail}&isRegistered=${false}`;
+      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${false}`;
       console.log(text);
       await Team.updateOne(
         {
@@ -147,7 +143,7 @@ exports.sendInvite = async (req, res) => {
       )
         .then(async (result) => {
           await sendEmail(
-            "events@codechefvit.com",
+            process.env.SES_EMAIL,
             inviteEmail,
             "Invite to team",
             text
