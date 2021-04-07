@@ -7,7 +7,7 @@ const recaptchaMiddleware = require('../middlewares/recaptchaVerification')
 
 router.patch("/update", checkAuth, recaptchaMiddleware, user.update);
 
-router.get("/getProfile",checkAuth, recaptchaMiddleware, user.getProfile);
+router.get("/getProfile",checkAuth, user.getProfile);
 
 router.post('/sendInvite',checkAuth, recaptchaMiddleware, user.sendInvite);
 
