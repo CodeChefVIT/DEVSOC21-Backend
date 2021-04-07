@@ -3,14 +3,16 @@ const router = require("express").Router();
 const user = require("../controllers/user");
 const checkAuth = require("../middlewares/checkAuth");
 
-router.patch("/update", checkAuth, user.update);
+const recaptchaMiddleware = require('../middlewares/recaptchaVerification')
 
-router.get("/getProfile",checkAuth, user.getProfile);
+router.patch("/update", checkAuth, recaptchaMiddleware, user.update);
 
-router.post('/sendInvite',checkAuth, user.sendInvite);
+router.get("/getProfile",checkAuth, recaptchaMiddleware, user.getProfile);
 
-router.post('/joinInvite', user.join);
+router.post('/sendInvite',checkAuth, recaptchaMiddleware, user.sendInvite);
 
-router.patch('/cancelInvite', checkAuth, user.cancelInvite)
+router.post('/joinInvite', recaptchaMiddleware, user.join);
+
+router.patch('/cancelInvite', checkAuth, recaptchaMiddleware, user.cancelInvite)
 
 module.exports = router;

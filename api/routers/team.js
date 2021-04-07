@@ -3,22 +3,24 @@ const router = require("express").Router();
 const team = require("../controllers/team");
 const checkAuth = require("../middlewares/checkAuth");
 
-router.post("/make", checkAuth, team.make);
+const recaptchaMiddleware = require("../middlewares/recaptchaVerification");
 
-router.post("/leave", checkAuth, team.leave);
+router.post("/make", checkAuth, recaptchaMiddleware, team.make);
 
-router.post("/join", checkAuth, team.join);
+router.post("/leave", checkAuth, recaptchaMiddleware, team.leave);
+
+router.post("/join", checkAuth, recaptchaMiddleware, team.join);
 
 router.get("/all", team.displayAll);
 
 router.get("/one", team.displayOne);
 
-router.patch("toggleFinalised", checkAuth, team.finalise);
+router.patch("toggleFinalised", checkAuth, recaptchaMiddleware, team.finalise);
 
-router.patch("/update", checkAuth, team.update);
+router.patch("/update", checkAuth, recaptchaMiddleware, team.update);
 
-router.get("/user",checkAuth,team.getTeamByUser);
+router.get("/user", checkAuth, team.getTeamByUser);
 
-router.post("/removeUser",checkAuth,team.removeUser);
+router.post("/removeUser", checkAuth, recaptchaMiddleware, team.removeUser);
 
 module.exports = router;
