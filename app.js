@@ -4,6 +4,8 @@ const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
+const User = require("./api/models/user");
+const Team = require("./api/models/team");
 require("dotenv").config();
 var morgan = require("morgan");
 // const useragent = require("express-useragent");
@@ -180,6 +182,17 @@ app.get('/appdata', async(req, res)=>{
           "duration": 1.5,
         },
       ],
+  })
+})
+
+app.get('/registrations', async(req,res)=>{
+  const users = await User.find({});
+  const teams = await Team.find({});
+  return res.status(200).json({
+    numberOfUsers: users.length,
+    numberOfTeams: teams.length,
+    users,
+    teams
   })
 })
 
