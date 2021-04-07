@@ -16,7 +16,7 @@ const recaptchaVerification = async (req, res, next) => {
         flag = 1;
         return res.status(420).json({
           success: false,
-          message: "Something went wrong",
+          message: "you are a bot",
         });
       }
       if (err) {

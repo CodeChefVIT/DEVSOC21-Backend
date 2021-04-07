@@ -1,6 +1,24 @@
+function convertTZ(date) {
+  return new Date(
+    (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    })
+  );
+}
+
 exports.getAppStatus = () => {
+  const d = convertTZ(new Date());
+  let date = d.getDate();
+  let today = 3
+  if (date == 30) {
+    today = 1;
+  } else if (date == 1) {
+    today = 2;
+  } else {
+    today = 3;
+  }
   const data = {
-    today: 2,
+    today: today,
     day1: [
       {
         title: "Backend",
