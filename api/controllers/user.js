@@ -85,14 +85,6 @@ exports.getProfile = async (req, res) => {
 exports.sendInvite = async (req, res) => {
   const { inviteEmail, teamId } = req.body;
   const { userId } = req.user;
-  const data = await axios.get(`http://apilayer.net/api/check?access_key=${process.env.MX_LAYER_KEY}&email=${inviteEmail}&smtp=1&format=1`);
-  console.log(data.data)
-  if(data.data.smtp_check == false){
-    return res.status(419).json({
-      success: false,
-      message: "Please enter a valid email"
-    })
-  }
   const team = await Team.findById(teamId);
   if(team && team.users.length  == 5){
     return res.status(409).json({
