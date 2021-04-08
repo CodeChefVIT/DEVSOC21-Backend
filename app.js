@@ -13,7 +13,7 @@ var morgan = require("morgan");
 const database = require("./config/database");
 
 const logResponseBody = require("./utils/logResponse");
-const { getAppStatus } = require("./utils/getAppStatus");
+const { getAppStatus, getFormData } = require("./utils/appController");
 
 const Like = require("./api/models/like");
 
