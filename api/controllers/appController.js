@@ -1,3 +1,8 @@
+const User = require("../models/user");
+var otpGenerator = require("otp-generator");
+const { sendEmail } = require("../../config/emailScript");
+const jwt = require("jsonwebtoken");
+
 function convertTZ(date) {
   return new Date(
     (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
@@ -9,7 +14,7 @@ function convertTZ(date) {
 exports.getAppStatus = () => {
   const d = convertTZ(new Date());
   let date = d.getDate();
-  let today = 3
+  let today = 3;
   if (date == 30) {
     today = 1;
   } else if (date == 1) {
@@ -118,4 +123,117 @@ exports.getAppStatus = () => {
     ],
   };
   return data;
+};
+
+exports.getAppOTP = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
+  } else {
+    if (user.numOtpLogins >= 1) {
+      return res.status(409).json({
+        message: "Sorry too much spam",
+        success: false,
+      });
+    } else {
+      const otp = otpGenerator.generate(6, {
+        digits: false,
+        upperCase: false,
+        specialChars: false,
+        alphabets: true,
+      });
+      let currentNumOtp = user.numOtpLogins || 0;
+      var createdDate = new Date();
+      var expiryDate = new Date();
+      expiryDate.setTime(createdDate.getTime() + 2 * 60 * 1000);
+      await User.updateOne(
+        { _id: user._id },
+        {
+          numOtpLogins: currentNumOtp + 1,
+          otpTimestamp: Date.now(),
+          currentOtp: otp,
+          otpExpiryTimestamp: expiryDate,
+        }
+      )
+        .then(async (result) => {
+          //// SEND EMAIL
+          await sendEmail(
+            process.env.SES_EMAIL,
+            user.email,
+            `OTP for App Login`,
+            otp
+          );
+          return res.status(200).json({
+            message: "OTP Sent",
+            success: true,
+          });
+        })
+        .catch((err) => {
+          return res.status(500).json({
+            success: false,
+            message: "Server Error",
+          });
+        });
+    }
+  }
+};
+
+exports.checkAppOTP = async (req, res) => {
+  const { otp } = req.body;
+  const user = await User.findOne({currentOtp: otp})
+  if(!user){
+    res.status(401).json({
+      message:"Invalid OTP",
+      success: false
+    })
+  }else{
+    if(user.otpExpiryTimestamp < Date.now()){
+      await User.updateOne(
+        { _id: user._id },
+        {
+          currentOtp: null,
+          otpExpiryTimestamp: null,
+          otpTimestamp: null,
+          numOtpLogins: 0,
+        }
+      );
+      res.status(402).json({
+        message:"OTP expired",
+        success: false,
+      })
+    }else {
+       // Generate JWT and send
+       const token = jwt.sign(
+        {
+          userId: user._id,
+          email: user.email,
+          name: user.name,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "30d",
+        }
+      );
+      await User.updateOne({
+        _id: user._id
+      },{
+        currentOtp: null
+      }).then((result)=>{
+        res.status(200).json({
+          message: "Successful login",
+          success: true,
+          token
+        })
+      }).catch((err)=>{
+        return res.status(500).json({
+          success: false,
+          message: "Server Error",
+        });
+      })
+    }
+  }
 };

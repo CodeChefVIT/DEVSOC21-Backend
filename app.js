@@ -8,6 +8,7 @@ const User = require("./api/models/user");
 const Team = require("./api/models/team");
 require("dotenv").config();
 var morgan = require("morgan");
+require('./cronJobs/index')
 // const useragent = require("express-useragent");
 
 const database = require("./config/database");
@@ -82,6 +83,7 @@ app.use(cors());
 app.use("/auth", require("./config/googleAuth"));
 app.use("/team", require("./api/routers/team"));
 app.use("/user", require("./api/routers/user"));
+app.use("/app", require("./api/routers/appRouters"));
 // ROUTERS END
 
 app.get("/appdata", async (req, res) => {
