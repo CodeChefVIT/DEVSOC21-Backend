@@ -13,7 +13,7 @@ var morgan = require("morgan");
 const database = require("./config/database");
 
 const logResponseBody = require("./utils/logResponse");
-const { getAppStatus } = require("./api/control./api/controllers/appController
+const { getAppStatus } = require("./api/controllers/appController")
 
 const Like = require("./api/models/like");
 
