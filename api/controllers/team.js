@@ -351,6 +351,7 @@ exports.finalise = async (req, res) => {
 exports.getTeamByUser = async(req,res)=>{
   const { userId } = req.user;
   const current = await User.findById(userId)
+  if(current){
   if(current.team){
   Team.findById(current.team)
   .populate({ path: "leader", select: "_id name" })
@@ -378,6 +379,12 @@ exports.getTeamByUser = async(req,res)=>{
       message:"Not in a team"
     })
   }
+}else{
+  return res.status(409).json({
+    message:"Relogin"
+  })
+
+}
 }
 
 
