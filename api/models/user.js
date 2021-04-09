@@ -48,6 +48,14 @@ const userSchema = mongoose.Schema(
     isCheckedIn: { type: Boolean },
 
     inTeam: { type: Boolean, default: false },
+
+    numOtpLogins: { type: Number, default: 0 },
+
+    otpTimestamp: { type: Date },
+
+    otpExpiryTimestamp: { type: Date },
+
+    currentOtp: { type: String, default: 0 },
   },
   { timestamps: true }
 );
