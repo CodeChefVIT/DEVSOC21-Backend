@@ -7,7 +7,7 @@ const axios = require('axios');
 
 exports.update = async (req, res) => {
   const { userId } = req.user;
-  if(req.body.avatar || req.body.email || req.body.numOtpLogins){
+  if(req.body.avatar || req.body.email){
     return res.status(500).json({
       message: "sorry no ctf here"
     })
