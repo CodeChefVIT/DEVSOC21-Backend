@@ -177,6 +177,7 @@ exports.getAppOTP = async (req, res) => {
           return res.status(500).json({
             success: false,
             message: "Server Error",
+            err: err.toString()
           });
         });
     }
@@ -233,8 +234,28 @@ exports.checkAppOTP = async (req, res) => {
         return res.status(500).json({
           success: false,
           message: "Server Error",
+          err: err.toString()
         });
       })
     }
   }
 };
+
+exports.getAppProfile = async (req, res)=>{
+  const { userId } = req.user;
+  await User.findById(userId)
+  .populate({ path: "team", select: "_id name submission" })
+    .select(" _id name email team personal ")
+    .then(user => {
+      return res.status(200).json({
+        success: true,
+        user
+      })
+    }).catch(err=>{
+      return res.status(500).json({
+        success: false,
+        message: "Server Error",
+        err: err.toString()
+      });
+    })
+}

@@ -9,5 +9,6 @@ router.post("/getOtp", app.getAppOTP);
 
 router.post("/checkOtp", app.checkAppOTP);
 
+router.get("/getProfile", checkAuth, app.getAppProfile);
 
 module.exports = router;
