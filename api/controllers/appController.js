@@ -48,6 +48,7 @@ exports.getAppStatus = () => {
       },
       {
         title: "CodeChef Hours",
+        details: "Some details, lorem ipsaum",
         start: "2021-04-05 14:00:00",
         end: "2021-04-05 15:30:00",
         startVal: 14,
