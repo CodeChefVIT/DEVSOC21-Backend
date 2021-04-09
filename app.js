@@ -80,6 +80,7 @@ app.use(cors());
 app.use("/auth", require("./config/googleAuth"));
 app.use("/team", require("./api/routers/team"));
 app.use("/user", require("./api/routers/user"));
+app.use("/admin",require("./api/routers/admin"))
 // ROUTERS END
 
 app.get('/appdata', async(req, res)=>{
