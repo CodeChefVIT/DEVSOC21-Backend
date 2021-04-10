@@ -29,7 +29,7 @@ exports.update = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   const { userId } = req.user;
-  console.log(req.headers)
+  console.log(req)
   let user = await User.aggregate([
     {
       $match: { _id: { $eq: mongoose.Types.ObjectId(userId) } },
