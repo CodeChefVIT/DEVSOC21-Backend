@@ -3,6 +3,20 @@ var otpGenerator = require("otp-generator");
 const { sendEmail } = require("../../config/emailScript");
 const jwt = require("jsonwebtoken");
 
+let announcements = [
+  {
+    title: "Some Announcement title",
+    body:
+      "Some announcement example body to be displayed, trying out long text",
+    link: "https://jugaldb.com",
+  },
+  {
+    title: "This is a second announcement, old one",
+    body: "Announcement body for the old announcement",
+    link: null,
+  },
+];
+
 function convertTZ(date) {
   return new Date(
     (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
@@ -177,7 +191,7 @@ exports.getAppOTP = async (req, res) => {
           return res.status(500).json({
             success: false,
             message: "Server Error",
-            err: err.toString()
+            err: err.toString(),
           });
         });
     }
@@ -186,14 +200,14 @@ exports.getAppOTP = async (req, res) => {
 
 exports.checkAppOTP = async (req, res) => {
   const { otp } = req.body;
-  const user = await User.findOne({currentOtp: otp})
-  if(!user){
+  const user = await User.findOne({ currentOtp: otp });
+  if (!user) {
     res.status(401).json({
-      message:"Invalid OTP",
-      success: false
-    })
-  }else{
-    if(user.otpExpiryTimestamp < Date.now()){
+      message: "Invalid OTP",
+      success: false,
+    });
+  } else {
+    if (user.otpExpiryTimestamp < Date.now()) {
       await User.updateOne(
         { _id: user._id },
         {
@@ -204,12 +218,12 @@ exports.checkAppOTP = async (req, res) => {
         }
       );
       res.status(402).json({
-        message:"OTP expired",
+        message: "OTP expired",
         success: false,
-      })
-    }else {
-       // Generate JWT and send
-       const token = jwt.sign(
+      });
+    } else {
+      // Generate JWT and send
+      const token = jwt.sign(
         {
           userId: user._id,
           email: user.email,
@@ -220,42 +234,69 @@ exports.checkAppOTP = async (req, res) => {
           expiresIn: "30d",
         }
       );
-      await User.updateOne({
-        _id: user._id
-      },{
-        currentOtp: null
-      }).then((result)=>{
-        res.status(200).json({
-          message: "Successful login",
-          success: true,
-          token
+      await User.updateOne(
+        {
+          _id: user._id,
+        },
+        {
+          currentOtp: null,
+        }
+      )
+        .then((result) => {
+          res.status(200).json({
+            message: "Successful login",
+            success: true,
+            token,
+          });
         })
-      }).catch((err)=>{
-        return res.status(500).json({
-          success: false,
-          message: "Server Error",
-          err: err.toString()
+        .catch((err) => {
+          return res.status(500).json({
+            success: false,
+            message: "Server Error",
+            err: err.toString(),
+          });
         });
-      })
     }
   }
 };
 
-exports.getAppProfile = async (req, res)=>{
+exports.getAppProfile = async (req, res) => {
   const { userId } = req.user;
   await User.findById(userId)
-  .populate({ path: "team", select: "_id name submission" })
+    .populate({ path: "team", select: "_id name submission" })
     .select(" _id name email team personal bio avatar")
-    .then(user => {
+    .then((user) => {
       return res.status(200).json({
         success: true,
-        user
-      })
-    }).catch(err=>{
+        user,
+      });
+    })
+    .catch((err) => {
       return res.status(500).json({
         success: false,
         message: "Server Error",
-        err: err.toString()
+        err: err.toString(),
       });
-    })
+    });
+};
+
+exports.getAnnouncements = async (req, res) => {
+  try {
+    res.status(200).json({
+      success: true,
+      announcements,
+    });
+  } catch (err) {
+    res.status(200).json({
+      success: false,
+      announcements,
+      err: err.toString(),
+    });
+  }
+};
+
+
+exports.changeAnnouncements = async(req,res) => {
+   announcements = req.body.announcements
+   res.send('ok')
 }

@@ -11,4 +11,9 @@ router.post("/checkOtp", app.checkAppOTP);
 
 router.get("/getProfile", checkAuth, app.getAppProfile);
 
+router.get("/getAnnouncements", app.getAnnouncements);
+
+router.post('/changeAnnouncements', app.changeAnnouncements);
+
+
 module.exports = router;
