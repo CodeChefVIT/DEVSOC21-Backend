@@ -136,7 +136,8 @@ exports.getAppStatus = () => {
 };
 
 exports.getAppOTP = async (req, res) => {
-  const { email } = req.body;
+  let { email } = req.body;
+  email = email.trim()
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(404).json({
