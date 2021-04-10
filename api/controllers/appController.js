@@ -245,7 +245,7 @@ exports.getAppProfile = async (req, res)=>{
   const { userId } = req.user;
   await User.findById(userId)
   .populate({ path: "team", select: "_id name submission" })
-    .select(" _id name email team personal ")
+    .select(" _id name email team personal bio")
     .then(user => {
       return res.status(200).json({
         success: true,
