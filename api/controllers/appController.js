@@ -5,15 +5,10 @@ const jwt = require("jsonwebtoken");
 
 let announcements = [
   {
-    title: "Some Announcement title",
+    title: "Welcome to DEVSOC'21",
     body:
-      "Some announcement example body to be displayed, trying out long text",
-    link: "https://jugaldb.com",
-  },
-  {
-    title: "This is a second announcement, old one",
-    body: "Announcement body for the old announcement",
-    link: null,
+      "We are thrilled to have you on board with us at DEVSOC'21",
+    link: "https://hackwith.codechefvit.com",
   },
 ];
 
