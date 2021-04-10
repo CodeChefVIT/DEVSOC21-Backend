@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 const user = require("../models/user");
 
 exports.make = async (req, res) => {
-  const { name } = req.body;
+  let { name } = req.body;
+  name = name.trim()
   const { userId } = req.user;
   if (!name) {
     return res.status(400).json({
@@ -87,7 +88,8 @@ exports.make = async (req, res) => {
 };
 
 exports.join = async (req, res) => {
-  const { code } = req.body;
+  let { code } = req.body;
+  code = code.trim()
   const { userId } = req.user;
 
   const team = await Team.findOne({ code });
