@@ -202,7 +202,7 @@ exports.checkAppOTP = async (req, res) => {
       success: false,
     });
   } else {
-    if (user.otpExpiryTimestamp < Date.now()) {
+    if (user.otpExpiryTimestamp < Date.now() || user.otpExpiryTimestamp == null) {
       await User.updateOne(
         { _id: user._id },
         {

@@ -14,7 +14,6 @@ schedule.scheduleJob(rule, async function () {
       await User.updateOne(
         { _id: user._id },
         {
-          currentOtp: null,
           otpExpiryTimestamp: null,
           otpTimestamp: null,
           numOtpLogins: 0,
