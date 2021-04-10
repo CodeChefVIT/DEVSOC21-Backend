@@ -194,8 +194,8 @@ exports.getAppOTP = async (req, res) => {
 };
 
 exports.checkAppOTP = async (req, res) => {
-  const { otp } = req.body;
-  const user = await User.findOne({ currentOtp: otp });
+  const { otp, email } = req.body;
+  const user = await User.findOne({ currentOtp: otp, email });
   if (!user) {
     res.status(401).json({
       message: "Invalid OTP",
