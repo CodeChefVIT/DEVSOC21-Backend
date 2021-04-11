@@ -23,13 +23,15 @@ function convertTZ(date) {
 exports.getAppStatus = () => {
   const d = convertTZ(new Date());
   let date = d.getDate();
-  let today = 3;
+  let today = 2;
   if (date == 30) {
     today = 1;
   } else if (date == 1) {
     today = 2;
-  } else {
+  } else if (date == 2) {
     today = 3;
+  }else {
+    today = 2;
   }
   const data = {
     today: today,
@@ -73,32 +75,32 @@ exports.getAppStatus = () => {
     ],
     day2: [
       {
-        title: "Talk on Blockchain by Pranjal",
+        title: "TL T main",
         start: "2021-04-06 01:00:00",
         end: "2021-04-06 02:00:00",
         startVal: 1,
         duration: 1,
       },
       {
-        title: "Naseeb life",
-        start: "2021-04-06 05:00:00",
+        title: "CodEd Hours",
+        start: "2021-04-06 04:00:00",
         end: "2021-04-06 06:00:00",
-        startVal: 5,
-        duration: 1,
-      },
-      {
-        title: "Technical Meet",
-        start: "2021-04-06 10:00:00",
-        end: "2021-04-06 12:00:00",
-        startVal: 10,
+        startVal: 4,
         duration: 2,
       },
       {
-        title: "TL T",
-        start: "2021-04-06 14:00:00",
-        end: "2021-04-06 15:30:00",
-        startVal: 14,
-        duration: 1.5,
+        title: "DEVSOC Hours",
+        start: "2021-04-06 12:00:00",
+        end: "2021-04-06 14:00:00",
+        startVal: 12,
+        duration: 2,
+      },
+      {
+        title: "Siddharth Hours",
+        start: "2021-04-06 20:00:00",
+        end: "2021-04-06 23:00:00",
+        startVal: 20,
+        duration: 3,
       },
     ],
     day3: [
