@@ -75,10 +75,10 @@ exports.getAppStatus = () => {
       },
       {
         title: "DEVSOC Hours",
-        start: "2021-04-06 12:00:00",
-        end: "2021-04-06 14:00:00",
-        startVal: 12,
-        duration: 2,
+        start: "2021-04-06 14:00:00",
+        end: "2021-04-06 17:00:00",
+        startVal: 14,
+        duration: 3,
       },
       {
         title: "Siddharth Hours",
