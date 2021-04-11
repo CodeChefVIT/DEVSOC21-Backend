@@ -11,13 +11,13 @@ const teamSchema = mongoose.Schema(
     code: { type: String, unique: true },
 
     submission: {
-    name:{type:String},
-    description: { type: String },
-    status:{type:String},
-    techStack:{type:String},
-    link:{type:String},
-    zip:{type:String}
-  },
+      name: { type: String },
+      description: { type: String },
+      status: { type: String },
+      techStack: { type: String },
+      link: { type: String },
+      zip: { type: String },
+    },
 
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 
@@ -26,9 +26,7 @@ const teamSchema = mongoose.Schema(
       default: "",
     },
 
-    invitedTeammates: [
-      { type: String }
-    ],
+    invitedTeammates: [{ type: String }],
     finalised: { type: Boolean, default: false },
   },
   { timestamps: true }

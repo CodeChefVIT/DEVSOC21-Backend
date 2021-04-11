@@ -68,6 +68,7 @@ exports.getProfile = async (req, res) => {
         "team._id": 1,
         "team.name": 1,
         "team.code": 1,
+        "team.submission": 1
       },
     },
   ]);

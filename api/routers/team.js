@@ -23,4 +23,6 @@ router.get("/user", checkAuth, team.getTeamByUser);
 
 router.post("/removeUser", checkAuth, recaptchaMiddleware, team.removeUser);
 
+router.post('/saveIdea', checkAuth, team.saveIdea);
+
 module.exports = router;
