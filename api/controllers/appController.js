@@ -24,25 +24,25 @@ const form = {
   "title": "Review One Form",
   "questions": [
     {
-      "question": "Please Enter team name",
+      "question": "team name",
       "type": "textfield",
       "value": null,
       "key": "teamName"
     },
     {
-      "question": "Please Enter Leader Name",
+      "question": "Leader Name",
       "type": "textfield",
       "value": null,
       "key": "leaderName"
     },
     {
-      "question": "Please Enter Leader Number",
+      "question": "Leader Number",
       "type": "textfield",
       "value": null,
       "key": "leaderNumber"
     },
     {
-      "question": "Please select your track",
+      "question": "Track",
       "type": "dropdown",
       "dropdownOptions": [
         "track 1",
@@ -56,7 +56,7 @@ const form = {
       "key": "track"
     },
     {
-      "question": "Any extra prizes?",
+      "question": "extra prizes",
       "type": "checkbox",
       "checkboxOptions": [
         "Extra prize 1",
