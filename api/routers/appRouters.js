@@ -17,4 +17,6 @@ router.post('/changeAnnouncements', app.changeAnnouncements);
 
 router.get('/getForm', app.getForm)
 
+router.post('/submitForm', checkAuth, app.submitform)
+
 module.exports = router;

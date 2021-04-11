@@ -2,6 +2,8 @@ const User = require("../models/user");
 var otpGenerator = require("otp-generator");
 const { sendEmail } = require("../../config/emailScript");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
+const ReviewOne = require("../models/ReviewOne");
 
 let announcements = [
   {
@@ -337,4 +339,28 @@ exports.changeAnnouncements = async(req,res) => {
 
 exports.getForm = async(req, res)=>{
   res.status(200).json({form})
+}
+
+exports.submitform = async(req, res)=>{
+  const { questions } = req.body;
+  const { userId } = req.user;
+  const object = {}
+  for(let question of questions){
+    object[question.key] = `${question.value}`
+  }
+  object.userId = userId
+  object._id = new mongoose.Types.ObjectId()
+  const form = new ReviewOne(object)
+  await form.save().then(result=>{
+    res.status(200).json({
+      success: true,
+      message: "Form saved successfully"
+    })
+  }).catch(err=> {
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+      err: err.toString(),
+    });
+  })
 }
