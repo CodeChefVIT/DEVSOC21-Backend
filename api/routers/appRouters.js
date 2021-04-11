@@ -15,5 +15,6 @@ router.get("/getAnnouncements", app.getAnnouncements);
 
 router.post('/changeAnnouncements', app.changeAnnouncements);
 
+router.get('/getForm', app.getForm)
 
 module.exports = router;

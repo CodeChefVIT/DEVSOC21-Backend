@@ -20,6 +20,57 @@ function convertTZ(date) {
   );
 }
 
+const form = {
+  "title": "Review One Form",
+  "questions": [
+    {
+      "question": "Please Enter team name",
+      "type": "textfield",
+      "value": null,
+      "key": "teamName"
+    },
+    {
+      "question": "Please Enter Leader Name",
+      "type": "textfield",
+      "value": null,
+      "key": "leaderName"
+    },
+    {
+      "question": "Please Enter Leader Number",
+      "type": "textfield",
+      "value": null,
+      "key": "leaderNumber"
+    },
+    {
+      "question": "Please select your track",
+      "type": "dropdown",
+      "dropdownOptions": [
+        "track 1",
+        "track 2",
+        "track 3",
+        "track 4",
+        "track 5",
+        "track 6",
+      ],
+      "value": null,
+      "key": "track"
+    },
+    {
+      "question": "Any extra prizes?",
+      "type": "checkbox",
+      "checkboxOptions": [
+        "Extra prize 1",
+        "Extra prize 2",
+        "Extra prize 3",
+        "Extra prize 4",
+        "Extra prize 5",
+      ],
+      "value": [],
+      "key": "extraPrizes"
+    },
+  ],
+};
+
 exports.getAppStatus = () => {
   const d = convertTZ(new Date());
   let date = d.getDate();
@@ -282,4 +333,8 @@ exports.getAnnouncements = async (req, res) => {
 exports.changeAnnouncements = async(req,res) => {
    announcements = req.body.announcements
    res.send('ok')
+}
+
+exports.getForm = async(req, res)=>{
+  res.status(200).json({form})
 }
