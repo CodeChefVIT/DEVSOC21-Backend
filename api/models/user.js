@@ -59,6 +59,8 @@ const userSchema = mongoose.Schema(
 
     otpExpiryTimestamp: { type: Date },
 
+    formSubmitTimeExpiry: {type: Date },
+
     currentOtp: { type: String, default: 0 },
   },
   { timestamps: true }

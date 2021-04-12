@@ -2,15 +2,22 @@ const User = require("../models/user");
 const Team = require("../models/team");
 const mongoose = require("mongoose");
 const { sendEmail } = require("../../config/emailScript");
-const { sendInvite } = require('../../config/sendInviteEmail')
-const axios = require('axios');
+const { sendInvite } = require("../../config/sendInviteEmail");
+const axios = require("axios");
 
 exports.update = async (req, res) => {
   const { userId } = req.user;
-  if(req.body.avatar || req.body.email || req.body.numOtpLogins){
+  if (
+    req.body.avatar ||
+    req.body.email ||
+    req.body.numOtpLogins ||
+    req.body.otpTimestamp ||
+    req.body.formSubmitTimeExpiry ||
+    req.body.otpExpiryTimestamp
+  ) {
     return res.status(500).json({
-      message: "sorry no ctf here"
-    })
+      message: "sorry no ctf here",
+    });
   }
   // console.log(teamId)
   update = req.body;
@@ -29,7 +36,7 @@ exports.update = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   const { userId } = req.user;
-  console.log(req)
+  console.log(req);
   let user = await User.aggregate([
     {
       $match: { _id: { $eq: mongoose.Types.ObjectId(userId) } },
@@ -68,7 +75,7 @@ exports.getProfile = async (req, res) => {
         "team._id": 1,
         "team.name": 1,
         "team.code": 1,
-        "team.submission": 1
+        "team.submission": 1,
       },
     },
   ]);
@@ -93,24 +100,24 @@ exports.sendInvite = async (req, res) => {
   const { inviteEmail, teamId } = req.body;
   const { userId } = req.user;
   const team = await Team.findById(teamId);
-  if(team && team.users.length  == 5){
+  if (team && team.users.length == 5) {
     return res.status(409).json({
       success: false,
-      message:"Team is full"
-    })
+      message: "Team is full",
+    });
   }
   if (!team || team.leader != userId) {
-    console.log(team.leader, userid)
+    console.log(team.leader, userid);
     res.status(404).json({
       success: false,
       message: "Does not exist",
     });
-  } else if (team && team.invitedTeammates.includes(inviteEmail)){
+  } else if (team && team.invitedTeammates.includes(inviteEmail)) {
     res.status(410).json({
       success: false,
       message: "User already invited",
     });
-  }else {
+  } else {
     const user = await User.findOne({ email: inviteEmail });
     if (user) {
       if (user.inTeam) {
@@ -119,8 +126,10 @@ exports.sendInvite = async (req, res) => {
           message: "already in a team",
         });
       }
-      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${true}`;
-      const html = sendInvite(req.user.name,text,team.code)
+      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${
+        team.code
+      }&email=${inviteEmail}&isRegistered=${true}`;
+      const html = sendInvite(req.user.name, text, team.code);
       await Team.updateOne(
         {
           _id: teamId,
@@ -148,8 +157,10 @@ exports.sendInvite = async (req, res) => {
           });
         });
     } else {
-      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${team.code}&email=${inviteEmail}&isRegistered=${false}`;
-      const html = sendInvite(req.user.name,text,team.code)
+      const text = `${process.env.EMAIL_REDIRECT}/jointeam?teamCode=${
+        team.code
+      }&email=${inviteEmail}&isRegistered=${false}`;
+      const html = sendInvite(req.user.name, text, team.code);
       console.log(text);
       await Team.updateOne(
         {
@@ -174,7 +185,7 @@ exports.sendInvite = async (req, res) => {
           res.status(500).json({
             success: false,
             message: "server error",
-            err: err.toString()
+            err: err.toString(),
           });
         });
     }

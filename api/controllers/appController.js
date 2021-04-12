@@ -8,8 +8,7 @@ const ReviewOne = require("../models/ReviewOne");
 let announcements = [
   {
     title: "Welcome to DEVSOC'21",
-    body:
-      "We are thrilled to have you on board with us at DEVSOC'21",
+    body: "We are thrilled to have you on board with us at DEVSOC'21",
     link: "https://hackwith.codechefvit.com",
   },
 ];
@@ -23,30 +22,30 @@ function convertTZ(date) {
 }
 
 const form = {
-  "title": "Review One Form",
-  "questions": [
+  title: "Review One Form",
+  questions: [
     {
-      "question": "team name",
-      "type": "textfield",
-      "value": null,
-      "key": "teamName"
+      question: "team name",
+      type: "textfield",
+      value: null,
+      key: "teamName",
     },
     {
-      "question": "Leader Name",
-      "type": "textfield",
-      "value": null,
-      "key": "leaderName"
+      question: "Leader Name",
+      type: "textfield",
+      value: null,
+      key: "leaderName",
     },
     {
-      "question": "Leader Number",
-      "type": "textfield",
-      "value": null,
-      "key": "leaderNumber"
+      question: "Leader Number",
+      type: "textfield",
+      value: null,
+      key: "leaderNumber",
     },
     {
-      "question": "Track",
-      "type": "dropdown",
-      "dropdownOptions": [
+      question: "Track",
+      type: "dropdown",
+      dropdownOptions: [
         "track 1",
         "track 2",
         "track 3",
@@ -54,21 +53,21 @@ const form = {
         "track 5",
         "track 6",
       ],
-      "value": null,
-      "key": "track"
+      value: null,
+      key: "track",
     },
     {
-      "question": "extra prizes",
-      "type": "checkbox",
-      "checkboxOptions": [
+      question: "extra prizes",
+      type: "checkbox",
+      checkboxOptions: [
         "Extra prize 1",
         "Extra prize 2",
         "Extra prize 3",
         "Extra prize 4",
         "Extra prize 5",
       ],
-      "value": [],
-      "key": "extraPrizes"
+      value: [],
+      key: "extraPrizes",
     },
   ],
 };
@@ -83,7 +82,7 @@ exports.getAppStatus = () => {
     today = 2;
   } else if (date == 2) {
     today = 3;
-  }else {
+  } else {
     today = 2;
   }
   const data = {
@@ -177,7 +176,7 @@ exports.getAppStatus = () => {
 
 exports.getAppOTP = async (req, res) => {
   let { email } = req.body;
-  email = email.trim()
+  email = email.trim();
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(404).json({
@@ -243,7 +242,10 @@ exports.checkAppOTP = async (req, res) => {
       success: false,
     });
   } else {
-    if (user.otpExpiryTimestamp < Date.now() || user.otpExpiryTimestamp == null) {
+    if (
+      user.otpExpiryTimestamp < Date.now() ||
+      user.otpExpiryTimestamp == null
+    ) {
       await User.updateOne(
         { _id: user._id },
         {
@@ -331,43 +333,71 @@ exports.getAnnouncements = async (req, res) => {
   }
 };
 
+exports.changeAnnouncements = async (req, res) => {
+  announcements = req.body.announcements;
+  res.send("ok");
+};
 
-exports.changeAnnouncements = async(req,res) => {
-   announcements = req.body.announcements
-   res.send('ok')
-}
+exports.getForm = async (req, res) => {
+  res.status(200).json({ form });
+};
 
-exports.getForm = async(req, res)=>{
-  res.status(200).json({form})
-}
-
-exports.submitform = async(req, res)=>{
+exports.submitform = async (req, res) => {
   const { questions } = req.body;
   const { userId } = req.user;
-  const user = await User.findById(userId)
-  if(!userId){
+  const user = await User.findById(userId);
+  if (!userId) {
     return res.status(401).json({
       success: false,
-      message: "User doesnt exist"
-    })
-  }
-  const object = {}
-  for(let question of questions){
-    object[question.key] = `${question.value}`
-  }
-  object.userId = userId
-  object._id = new mongoose.Types.ObjectId()
-  const form = new ReviewOne(object)
-  await form.save().then(result=>{
-    res.status(200).json({
-      success: true,
-      message: "Form saved successfully"
-    })
-  }).catch(err=> {
-    return res.status(500).json({
-      success: false,
-      message: "Server Error",
-      err: err.toString(),
+      message: "User doesnt exist",
     });
-  })
-}
+  }
+  if (user && Date.now() < user.formSubmitTimeExpiry) {
+    return res.status(402).json({
+      success: false,
+      message: "Please wait for 2 minutes before submitting the form again",
+      messageHacker: "No DDoS here",
+    });
+  }
+  const object = {};
+  for (let question of questions) {
+    object[question.key] = `${question.value}`;
+  }
+  object.userId = userId;
+  object._id = new mongoose.Types.ObjectId();
+  var createdDate = new Date();
+  var expiryDate = new Date();
+  expiryDate.setTime(createdDate.getTime() + 2 * 60 * 1000);
+  await User.updateOne({ _id: userId }, { formSubmitTimeExpiry: expiryDate })
+    .then(async (result) => {
+      var id = mongoose.Types.ObjectId(userId)
+      const reviewOne = await ReviewOne.find({ userId: id });
+      console.log(reviewOne)
+      if (reviewOne.length >= 1) {
+        await ReviewOne.deleteMany({ userId: id });
+      }
+      const form = new ReviewOne(object);
+      await form
+        .save()
+        .then((result) => {
+          res.status(200).json({
+            success: true,
+            message: "Form saved successfully",
+          });
+        })
+        .catch((err) => {
+          return res.status(500).json({
+            success: false,
+            message: "Server Error",
+            err: err.toString(),
+          });
+        });
+    })
+    .catch((err) => {
+      return res.status(500).json({
+        success: false,
+        message: "Server Error",
+        err: err.toString(),
+      });
+    });
+};
