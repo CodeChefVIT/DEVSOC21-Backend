@@ -12,7 +12,7 @@ router.post("/leave", checkAuth, recaptchaMiddleware, team.leave);
 router.post("/join", checkAuth, recaptchaMiddleware, team.join);
 
 router.get("/all", team.displayAll);
-
+  
 router.get("/one", team.displayOne);
 
 router.patch("toggleFinalised", checkAuth, recaptchaMiddleware, team.finalise);

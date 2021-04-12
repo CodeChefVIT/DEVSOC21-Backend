@@ -9,7 +9,7 @@ router.post('/login',admin.login)
 
 router.get("/all", checkAdmin, admin.displayAll);
 
-router.get("/id",checkAdmin,admin.submissionById)
+router.get("/team/:teamId",checkAdmin,admin.submissionById)
 
 router.get("/name",checkAdmin,admin.submissionByName)
 

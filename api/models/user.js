@@ -19,6 +19,10 @@ const userSchema = mongoose.Schema(
 
     college: { type: String, default: "" },
 
+    collegeYear :{type:Number,default:null},
+
+    regNumber :{type:String,default:null},
+
     bio: { type: String, default: ""  },
 
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },

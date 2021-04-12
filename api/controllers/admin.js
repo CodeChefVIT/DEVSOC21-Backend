@@ -48,7 +48,7 @@ exports.displayAll = async (req, res) => {
   Team.find({})
     .populate({ path: "leader", select: "_id name" })
     .populate({ path: "users", select: "_id name email" })
-    .select("-code -idea -avatar -submission -updatedAt -__v ")
+    .select("-code -idea -avatar  -updatedAt -__v ")
     .then((teams) => {
       res.status(200).json({
         teams,
@@ -62,11 +62,18 @@ exports.displayAll = async (req, res) => {
 };
 
 exports.submissionById = async (req,res)=>{
-  const {teamId} = req.body
-  await Team.findById(teamId).then((team)=>{
+  const {teamId} = req.params
+  await Team.findById(teamId)
+  .populate({ path: "leader", select: "_id name" })
+  .populate({ path: "users", select: "_id name email" })
+  .select("  -avatar  -updatedAt -__v ")
+  .then((team)=>{
   res.status(200).json({
     team
   })
+  })
+  .catch((e)=>{
+    error:e.toString()
   })
 }
 
@@ -82,9 +89,10 @@ exports.submissionByName = async (req,res)=>{
 exports.submissionStatus = async (req,res)=>{
   const {status,teamId} = req.body
   if(teamId){
-  await Team.updateOne({_id:teamId},{submission:{status:status}}).then(()=>{
+  await Team.findOneAndUpdate({_id:teamId},{submission:{status:status}},{new:true}).then((team)=>{
     res.status(201).json({
-      message:"Updated"
+      message:"Updated",
+      team
     })
   })
     .catch((e)=>{
