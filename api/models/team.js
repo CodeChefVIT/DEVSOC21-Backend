@@ -13,7 +13,7 @@ const teamSchema = mongoose.Schema(
     submission: {
       name: { type: String },
       description: { type: String },
-      status: { type: String },
+      status: { type: String, default: "Not Submitted" },
       track: { type: String, default: "Open Innovation" },
       techStack: { type: String },
       link: { type: String },
