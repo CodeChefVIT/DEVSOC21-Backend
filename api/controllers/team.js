@@ -470,6 +470,7 @@ exports.saveIdea = async (req, res) => {
       const submission = {
         name,
         description,
+        track
       };
       await Team.updateOne(
         {
