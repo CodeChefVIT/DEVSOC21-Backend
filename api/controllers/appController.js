@@ -344,6 +344,13 @@ exports.getForm = async(req, res)=>{
 exports.submitform = async(req, res)=>{
   const { questions } = req.body;
   const { userId } = req.user;
+  const user = await User.findById(userId)
+  if(!userId){
+    return res.status(401).json({
+      success: false,
+      message: "User doesnt exist"
+    })
+  }
   const object = {}
   for(let question of questions){
     object[question.key] = `${question.value}`
