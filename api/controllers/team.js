@@ -458,7 +458,7 @@ exports.removeUser = async (req, res) => {
 
 exports.saveIdea = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, track } = req.body;
     const { userId } = req.user;
     const user = await User.findById(userId);
     if (!user) {
