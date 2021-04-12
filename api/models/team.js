@@ -14,7 +14,7 @@ const teamSchema = mongoose.Schema(
       name: { type: String },
       description: { type: String },
       status: { type: String },
-      track: { type: String },
+      track: { type: String, default: "Open Innovation" },
       techStack: { type: String },
       link: { type: String },
       zip: { type: String },
