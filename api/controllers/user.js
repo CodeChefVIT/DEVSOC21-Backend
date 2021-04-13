@@ -328,7 +328,7 @@ exports.cancelInvite = async (req, res) => {
 };
 
 exports.sendFCM = async (req, res) => {
-  var registrationToken = "YOUR_REGISTRATION_TOKEN";
+  var registrationToken = "dIzW_aRMScekcfza1OSfUx:APA91bFqwrlzsocmMVAy-sm1d3Rv-OuOUB9FnDdbkg3KkXCBVWLylgLU7HA1EgFNVHv76SfHOdA_WxF9-U0Ex0X12MmCPrFCn4wSjCJJ7O_bd8x_jvFpBkVNeMHsR90ViyJdYt1Sc0DC";
 
   var message = {
     token: registrationToken,
@@ -337,9 +337,8 @@ exports.sendFCM = async (req, res) => {
       body: "Arsenal goal in added time, score is now 3-0",
     },
     android: {
-      ttl: "86400s",
       notification: {
-        click_action: "OPEN_ACTIVITY_1",
+        click_action: "FLUTTER_NOTIFICATION_CLICK",
       },
     },
     apns: {
@@ -362,8 +361,10 @@ exports.sendFCM = async (req, res) => {
     .then((response) => {
       // Response is a message ID string.
       console.log("Successfully sent message:", response);
+      res.send(response)
     })
     .catch((error) => {
       console.log("Error sending message:", error);
+      res.send(error)
     });
 };
