@@ -66,6 +66,8 @@ const userSchema = mongoose.Schema(
     formSubmitTimeExpiry: { type: Date },
 
     currentOtp: { type: String, default: 0 },
+
+    fcmToken = { type: String },
   },
   { timestamps: true }
 );
