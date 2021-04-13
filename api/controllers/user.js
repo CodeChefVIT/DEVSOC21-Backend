@@ -36,7 +36,6 @@ exports.update = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   const { userId } = req.user;
-  console.log(req);
   let user = await User.aggregate([
     {
       $match: { _id: { $eq: mongoose.Types.ObjectId(userId) } },
@@ -57,6 +56,8 @@ exports.getProfile = async (req, res) => {
         mobile: 1,
         avatar: 1,
         college: 1,
+        collegeYear: 1,
+        regNumber: 1,
         bio: 1,
         "address.line1": 1,
         "address.line2": 1,
@@ -79,11 +80,35 @@ exports.getProfile = async (req, res) => {
       },
     },
   ]);
+
   if (user) {
     user = Object(user[0]);
     if (user.team && user.team.length >= 1) {
       user.team = user.team[0];
     }
+    console.log(user)
+    let is_profile_completed = true
+    if (
+      !user.name ||
+      !user.mobile ||
+      user.college == "" ||
+      !user.collegeYear ||
+      user.bio == "" ||
+      user.address.line1 == "" ||
+      !user.address.pincode ||
+      user.address.city == "" ||
+      user.address.state == "" ||
+      user.address.country == "" ||
+      user.personal.github == "" ||
+      user.personal.linkedin == "" ||
+      !user.personal.tshirt ||
+      user.personal.resume == "" ||
+      user.personal.discord.nickname  == ""||
+      user.personal.discord.hash  == ""
+    ) {
+      is_profile_completed = false;
+    }
+    user.is_profile_completed = is_profile_completed
     res.status(200).json({
       success: true,
       user,
