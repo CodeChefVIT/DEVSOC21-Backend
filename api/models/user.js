@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema(
 
     college: { type: String, default: "" },
 
-    collegeYear: { type: Number, default: null },
+    collegeYear: { type: Number, default: 1 },
 
     regNumber: { type: String, default: null },
 
