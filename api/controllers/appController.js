@@ -92,6 +92,8 @@ exports.getAppStatus = () => {
         title: "Backend",
         start: "2021-04-10 05:00:00",
         end: "2021-04-10 09:00:00",
+        details:"Some big details",
+        image:"https://lh3.googleusercontent.com/a-/AOh14Gh_Don2HuJTwTvUP_b3slI2u-SLnAMk_cBtrq125g=s96-c",
         startVal: 5,
         duration: 4,
       },
