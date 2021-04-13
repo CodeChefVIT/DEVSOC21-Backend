@@ -19,34 +19,38 @@ const userSchema = mongoose.Schema(
 
     college: { type: String, default: "" },
 
-    collegeYear :{type:Number,default:null},
+    collegeYear: { type: Number, default: null },
 
-    regNumber :{type:String,default:null},
+    regNumber: { type: String, default: null },
 
-    bio: { type: String, default: ""  },
+    bio: { type: String, default: "" },
 
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
 
     address: {
-      line1: { type: String, default: ""  },
-      line2: { type: String, default: ""  },
+      line1: { type: String, default: "" },
+      line2: { type: String, default: "" },
       pincode: { type: Number },
-      city: { type: String, default: ""  },
-      state: { type: String, default: ""  },
-      country: { type: String, default: ""  },
+      city: { type: String, default: "" },
+      state: { type: String, default: "" },
+      country: { type: String, default: "" },
     },
     personal: {
-      github: { type: String, default: ""  },
+      github: { type: String, default: "" },
       discord: {
-        nickname: { type: String, default: ""  },
-        hash: { type: String, default: ""  },
+        nickname: { type: String, default: "" },
+        hash: { type: String, default: "" },
       },
-      website: { type: String, default: ""  },
+      website: { type: String, default: "" },
 
-      tshirt: { type: String, enum: ["S", "M", "L", "XL", "XXL"], default: "L" },
+      tshirt: {
+        type: String,
+        enum: ["S", "M", "L", "XL", "XXL"],
+        default: "L",
+      },
 
-      resume: { type: String, default: ""  },
-      linkedin: { type: String, default: ""  },
+      resume: { type: String, default: "" },
+      linkedin: { type: String, default: "" },
     },
 
     isCheckedIn: { type: Boolean },
@@ -59,7 +63,7 @@ const userSchema = mongoose.Schema(
 
     otpExpiryTimestamp: { type: Date },
 
-    formSubmitTimeExpiry: {type: Date },
+    formSubmitTimeExpiry: { type: Date },
 
     currentOtp: { type: String, default: 0 },
   },
