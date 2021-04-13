@@ -472,6 +472,17 @@ exports.saveIdea = async (req, res) => {
         description,
         track
       };
+      const team = await Team.findById(user.team)
+      if(team){
+        if(team.users.length < 2 || team.users.length>5){
+          console.log(team)
+          console.log(team.users.length)
+          return res.status(409).json({
+            success: false,
+            message:"Please complete your team"
+          })
+        }
+      }
       await Team.updateOne(
         {
           _id: user.team,
