@@ -67,7 +67,7 @@ const userSchema = mongoose.Schema(
 
     currentOtp: { type: String, default: 0 },
 
-    fcmToken = { type: String },
+    fcmToken : { type: String },
   },
   { timestamps: true }
 );

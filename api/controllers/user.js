@@ -4,6 +4,11 @@ const mongoose = require("mongoose");
 const { sendEmail } = require("../../config/emailScript");
 const { sendInvite } = require("../../config/sendInviteEmail");
 const axios = require("axios");
+var admin = require("firebase-admin");
+var serviceAccount = require("../../devsoc21-firebase-adminsdk-jzxvt-1bca73a0fc.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 exports.update = async (req, res) => {
   const { userId } = req.user;
@@ -86,8 +91,8 @@ exports.getProfile = async (req, res) => {
     if (user.team && user.team.length >= 1) {
       user.team = user.team[0];
     }
-    console.log(user)
-    let is_profile_completed = true
+    console.log(user);
+    let is_profile_completed = true;
     if (
       !user.name ||
       !user.mobile ||
@@ -103,12 +108,12 @@ exports.getProfile = async (req, res) => {
       user.personal.linkedin == "" ||
       !user.personal.tshirt ||
       user.personal.resume == "" ||
-      user.personal.discord.nickname  == ""||
-      user.personal.discord.hash  == ""
+      user.personal.discord.nickname == "" ||
+      user.personal.discord.hash == ""
     ) {
       is_profile_completed = false;
     }
-    user.is_profile_completed = is_profile_completed
+    user.is_profile_completed = is_profile_completed;
     res.status(200).json({
       success: true,
       user,
@@ -319,5 +324,46 @@ exports.cancelInvite = async (req, res) => {
         success: false,
         message: "server error",
       });
+    });
+};
+
+exports.sendFCM = async (req, res) => {
+  var registrationToken = "YOUR_REGISTRATION_TOKEN";
+
+  var message = {
+    token: registrationToken,
+    notification: {
+      title: "Match update",
+      body: "Arsenal goal in added time, score is now 3-0",
+    },
+    android: {
+      ttl: "86400s",
+      notification: {
+        click_action: "OPEN_ACTIVITY_1",
+      },
+    },
+    apns: {
+      headers: {
+        "apns-priority": "5",
+      },
+      payload: {
+        aps: {
+          category: "NEW_MESSAGE_CATEGORY",
+        },
+      },
+    },
+  };
+
+  // Send a message to the device corresponding to the provided
+  // registration token.
+  admin
+    .messaging()
+    .send(message)
+    .then((response) => {
+      // Response is a message ID string.
+      console.log("Successfully sent message:", response);
+    })
+    .catch((error) => {
+      console.log("Error sending message:", error);
     });
 };

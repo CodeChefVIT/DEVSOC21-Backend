@@ -280,7 +280,7 @@ exports.checkAppOTP = async (req, res) => {
         },
         {
           currentOtp: null,
-          fcmToken = req.body.fcmToken
+          fcmToken: req.body.fcmToken
         }
       )
         .then((result) => {
