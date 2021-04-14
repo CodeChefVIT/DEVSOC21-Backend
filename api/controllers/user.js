@@ -5,10 +5,10 @@ const { sendEmail } = require("../../config/emailScript");
 const { sendInvite } = require("../../config/sendInviteEmail");
 const axios = require("axios");
 var admin = require("firebase-admin");
-var serviceAccount = require("../../devsoc21-firebase-adminsdk-jzxvt-1bca73a0fc.json");
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+// var serviceAccount = require("../../devsoc21-firebase-adminsdk-jzxvt-1bca73a0fc.json");
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+// });
 
 exports.update = async (req, res) => {
   const { userId } = req.user;
@@ -327,44 +327,44 @@ exports.cancelInvite = async (req, res) => {
     });
 };
 
-exports.sendFCM = async (req, res) => {
-  var registrationToken = "dIzW_aRMScekcfza1OSfUx:APA91bFqwrlzsocmMVAy-sm1d3Rv-OuOUB9FnDdbkg3KkXCBVWLylgLU7HA1EgFNVHv76SfHOdA_WxF9-U0Ex0X12MmCPrFCn4wSjCJJ7O_bd8x_jvFpBkVNeMHsR90ViyJdYt1Sc0DC";
+// exports.sendFCM = async (req, res) => {
+//   var registrationToken = "dIzW_aRMScekcfza1OSfUx:APA91bFqwrlzsocmMVAy-sm1d3Rv-OuOUB9FnDdbkg3KkXCBVWLylgLU7HA1EgFNVHv76SfHOdA_WxF9-U0Ex0X12MmCPrFCn4wSjCJJ7O_bd8x_jvFpBkVNeMHsR90ViyJdYt1Sc0DC";
 
-  var message = {
-    token: registrationToken,
-    notification: {
-      title: "Match update",
-      body: "Arsenal goal in added time, score is now 3-0",
-    },
-    android: {
-      notification: {
-        click_action: "FLUTTER_NOTIFICATION_CLICK",
-      },
-    },
-    apns: {
-      headers: {
-        "apns-priority": "5",
-      },
-      payload: {
-        aps: {
-          category: "NEW_MESSAGE_CATEGORY",
-        },
-      },
-    },
-  };
+//   var message = {
+//     token: registrationToken,
+//     notification: {
+//       title: "Match update",
+//       body: "Arsenal goal in added time, score is now 3-0",
+//     },
+//     android: {
+//       notification: {
+//         click_action: "FLUTTER_NOTIFICATION_CLICK",
+//       },
+//     },
+//     apns: {
+//       headers: {
+//         "apns-priority": "5",
+//       },
+//       payload: {
+//         aps: {
+//           category: "NEW_MESSAGE_CATEGORY",
+//         },
+//       },
+//     },
+//   };
 
-  // Send a message to the device corresponding to the provided
-  // registration token.
-  admin
-    .messaging()
-    .send(message)
-    .then((response) => {
-      // Response is a message ID string.
-      console.log("Successfully sent message:", response);
-      res.send(response)
-    })
-    .catch((error) => {
-      console.log("Error sending message:", error);
-      res.send(error)
-    });
-};
+//   // Send a message to the device corresponding to the provided
+//   // registration token.
+//   admin
+//     .messaging()
+//     .send(message)
+//     .then((response) => {
+//       // Response is a message ID string.
+//       console.log("Successfully sent message:", response);
+//       res.send(response)
+//     })
+//     .catch((error) => {
+//       console.log("Error sending message:", error);
+//       res.send(error)
+//     });
+// };
