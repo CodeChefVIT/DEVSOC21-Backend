@@ -404,3 +404,22 @@ exports.submitform = async (req, res) => {
       });
     });
 };
+
+exports.logoutApp = async (req, res)=>{
+  const {userId} = req.user;
+  await User.updateOne({
+    _id: userId
+  },{
+    fcmToken: null
+  }).then(result=>{
+    res.status(200).json({
+      success: true,
+      message: "Successfully Logged Out"
+    })
+  }).catch(err=>{
+    res.status(500).json({
+      success: false,
+      message: "Server Error"
+    })
+  })
+}

@@ -19,4 +19,6 @@ router.get('/getForm', app.getForm)
 
 router.post('/submitForm', checkAuth, app.submitform)
 
+router.post("/logout", checkAuth, app.logoutApp)
+
 module.exports = router;

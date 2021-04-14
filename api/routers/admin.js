@@ -13,6 +13,6 @@ router.get("/team/:teamId",checkAdmin,admin.submissionById)
 
 router.get("/name",checkAdmin,admin.submissionByName)
 
-router.patch("/status",checkAdmin,admin.submissionStatus)
+router.patch("/status",checkAdmin,admin.submissionStatus);
 
 module.exports = router

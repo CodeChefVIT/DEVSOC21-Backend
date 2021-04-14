@@ -328,18 +328,20 @@ exports.cancelInvite = async (req, res) => {
 };
 
 // exports.sendFCM = async (req, res) => {
-//   var registrationToken = "dIzW_aRMScekcfza1OSfUx:APA91bFqwrlzsocmMVAy-sm1d3Rv-OuOUB9FnDdbkg3KkXCBVWLylgLU7HA1EgFNVHv76SfHOdA_WxF9-U0Ex0X12MmCPrFCn4wSjCJJ7O_bd8x_jvFpBkVNeMHsR90ViyJdYt1Sc0DC";
+//   var registrationToken = "dRNcMHcmQ9-e1g8lSliiHC:APA91bHeU-XozV3Uj_V35CJGYbqIuErq5V3j6PcLD1Wem7NIqObCuHYjdzafvMRkhhj5z6UnAqtkX211geYwh_0KbWBLxxcfwIQ1JnFUcJBMh1lsd9PZw92Z2bmYHSwCpNUwDOqxMtid";
 
 //   var message = {
 //     token: registrationToken,
+    
 //     notification: {
 //       title: "Match update",
 //       body: "Arsenal goal in added time, score is now 3-0",
 //     },
-//     android: {
-//       notification: {
-//         click_action: "FLUTTER_NOTIFICATION_CLICK",
-//       },
+//     data: {
+//       "click_action": "FLUTTER_NOTIFICATION_CLICK",
+//       "sound": "default", 
+//       "status": "done",
+//       "screen": "screenA",
 //     },
 //     apns: {
 //       headers: {
@@ -352,6 +354,7 @@ exports.cancelInvite = async (req, res) => {
 //       },
 //     },
 //   };
+
 
 //   // Send a message to the device corresponding to the provided
 //   // registration token.
