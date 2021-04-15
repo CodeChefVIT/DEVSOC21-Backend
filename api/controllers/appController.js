@@ -346,7 +346,8 @@ exports.getAppProfile = async (req, res) => {
           user.team.submission.iconColor = 4280287115
           break;
         default:
-          // code block
+          user.team.submission.icon = 62461
+          user.team.submission.iconColor = 4280287115
       }
       return res.status(200).json({
         success: true,
