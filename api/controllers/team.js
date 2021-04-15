@@ -470,7 +470,8 @@ exports.saveIdea = async (req, res) => {
       const submission = {
         name,
         description,
-        track
+        track,
+        status: "Submitted"
       };
       const team = await Team.findById(user.team)
       if(team){

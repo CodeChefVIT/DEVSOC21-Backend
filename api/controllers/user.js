@@ -328,7 +328,7 @@ exports.cancelInvite = async (req, res) => {
 };
 
 // exports.sendFCM = async (req, res) => {
-//   var registrationToken = "dRNcMHcmQ9-e1g8lSliiHC:APA91bHeU-XozV3Uj_V35CJGYbqIuErq5V3j6PcLD1Wem7NIqObCuHYjdzafvMRkhhj5z6UnAqtkX211geYwh_0KbWBLxxcfwIQ1JnFUcJBMh1lsd9PZw92Z2bmYHSwCpNUwDOqxMtid";
+//   var registrationToken = "df4OvFlBcUqKlwa2YkJsGC:APA91bHF45PHbfkroIVkbs2rC3LHLGCqdRfJMC8C9GeVtEgW9tNfmhwGsN15Amxj4u0-DuGYRaxmzLRblHPZaQ5o_cErbPFicPDEKrFmJIby8E9GGOBXnBeSpwZJMuQealsuJ4OlzbyU";
 
 //   var message = {
 //     token: registrationToken,
