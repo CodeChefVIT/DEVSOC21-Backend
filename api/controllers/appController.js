@@ -92,8 +92,9 @@ exports.getAppStatus = () => {
         title: "Backend",
         start: "2021-04-10 05:00:00",
         end: "2021-04-10 09:00:00",
-        details:"Some big details",
-        image:"https://lh3.googleusercontent.com/a-/AOh14Gh_Don2HuJTwTvUP_b3slI2u-SLnAMk_cBtrq125g=s96-c",
+        details: "Some big details",
+        image:
+          "https://lh3.googleusercontent.com/a-/AOh14Gh_Don2HuJTwTvUP_b3slI2u-SLnAMk_cBtrq125g=s96-c",
         startVal: 5,
         duration: 4,
       },
@@ -280,7 +281,7 @@ exports.checkAppOTP = async (req, res) => {
         },
         {
           currentOtp: null,
-          fcmToken: req.body.fcmToken
+          fcmToken: req.body.fcmToken,
         }
       )
         .then((result) => {
@@ -307,47 +308,48 @@ exports.getAppProfile = async (req, res) => {
     .populate({ path: "team", select: "_id name submission" })
     .select(" _id name email team personal bio avatar")
     .then((user) => {
-      console.log(user)
-      switch(user.team.submission.status) {
+      console.log(user);
+      user = user.toObject();
+      switch (user.team.submission.status) {
         case "Not Submitted":
-          user.team.submission.icon = 62468
-          user.team.submission.iconColor = 4294909786
+          user.team.submission.icon = 62468;
+          user.team.submission.iconColor = 4294909786;
           break;
         case "Submitted":
-          user.team.submission.icon = 62461
-          user.team.submission.iconColor = 4280287115
+          user.team.submission.icon = 62461;
+          user.team.submission.iconColor = 4280287115;
           break;
         case "Shortlisted For DEVSOC'21":
-          user.team.submission.icon = 62461
-          user.team.submission.iconColor = 4280287115
+          user.team.submission.icon = 62461;
+          user.team.submission.iconColor = 4280287115;
           break;
         case "Not Shortlisted For DEVSOC'21":
-          user.team.submission.icon = 62468
-          user.team.submission.iconColor = 4294909786
+          user.team.submission.icon = 62468;
+          user.team.submission.iconColor = 4294909786;
           break;
         case "Shortlisted For Round 2":
-          user.team.submission.icon = 62461
-          user.team.submission.iconColor = 4280287115
+          user.team.submission.icon = 62461;
+          user.team.submission.iconColor = 4280287115;
           break;
         case "Not Shortlisted For Round 2":
-          user.team.submission.icon = 62468
-          user.team.submission.iconColor = 4294909786
+          user.team.submission.icon = 62468;
+          user.team.submission.iconColor = 4294909786;
           break;
         case "Project Submitted":
-          user.team.submission.icon = 62461
-          user.team.submission.iconColor = 4280287115
+          user.team.submission.icon = 62461;
+          user.team.submission.iconColor = 4280287115;
           break;
         case "Project Not Submitted":
-          user.team.submission.icon = 62468
-          user.team.submission.iconColor = 4294909786
+          user.team.submission.icon = 62468;
+          user.team.submission.iconColor = 4294909786;
           break;
         case "Selected For Final Round":
-          user.team.submission.icon = 62461
-          user.team.submission.iconColor = 4280287115
+          user.team.submission.icon = 62461;
+          user.team.submission.iconColor = 4280287115;
           break;
         default:
-          user.team.submission.icon = 62461
-          user.team.submission.iconColor = 4280287115
+          user.team.submission.icon = 62461;
+          user.team.submission.iconColor = 4280287115;
       }
       return res.status(200).json({
         success: true,
@@ -415,9 +417,9 @@ exports.submitform = async (req, res) => {
   expiryDate.setTime(createdDate.getTime() + 2 * 60 * 1000);
   await User.updateOne({ _id: userId }, { formSubmitTimeExpiry: expiryDate })
     .then(async (result) => {
-      var id = mongoose.Types.ObjectId(userId)
+      var id = mongoose.Types.ObjectId(userId);
       const reviewOne = await ReviewOne.find({ userId: id });
-      console.log(reviewOne)
+      console.log(reviewOne);
       if (reviewOne.length >= 1) {
         await ReviewOne.deleteMany({ userId: id });
       }
@@ -447,21 +449,26 @@ exports.submitform = async (req, res) => {
     });
 };
 
-exports.logoutApp = async (req, res)=>{
-  const {userId} = req.user;
-  await User.updateOne({
-    _id: userId
-  },{
-    fcmToken: null
-  }).then(result=>{
-    res.status(200).json({
-      success: true,
-      message: "Successfully Logged Out"
+exports.logoutApp = async (req, res) => {
+  const { userId } = req.user;
+  await User.updateOne(
+    {
+      _id: userId,
+    },
+    {
+      fcmToken: null,
+    }
+  )
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: "Successfully Logged Out",
+      });
     })
-  }).catch(err=>{
-    res.status(500).json({
-      success: false,
-      message: "Server Error"
-    })
-  })
-}
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server Error",
+      });
+    });
+};
