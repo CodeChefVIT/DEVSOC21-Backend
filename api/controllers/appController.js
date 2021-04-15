@@ -307,6 +307,47 @@ exports.getAppProfile = async (req, res) => {
     .populate({ path: "team", select: "_id name submission" })
     .select(" _id name email team personal bio avatar")
     .then((user) => {
+      console.log(user)
+      switch(user.team.submission.status) {
+        case "Not Submitted":
+          user.team.submission.icon = 62468
+          user.team.submission.iconColor = 4294909786
+          break;
+        case "Submitted":
+          user.team.submission.icon = 62461
+          user.team.submission.iconColor = 4280287115
+          break;
+        case "Shortlisted For DEVSOC'21":
+          user.team.submission.icon = 62461
+          user.team.submission.iconColor = 4280287115
+          break;
+        case "Not Shortlisted For DEVSOC'21":
+          user.team.submission.icon = 62468
+          user.team.submission.iconColor = 4294909786
+          break;
+        case "Shortlisted For Round 2":
+          user.team.submission.icon = 62461
+          user.team.submission.iconColor = 4280287115
+          break;
+        case "Not Shortlisted For Round 2":
+          user.team.submission.icon = 62468
+          user.team.submission.iconColor = 4294909786
+          break;
+        case "Project Submitted":
+          user.team.submission.icon = 62461
+          user.team.submission.iconColor = 4280287115
+          break;
+        case "Project Not Submitted":
+          user.team.submission.icon = 62468
+          user.team.submission.iconColor = 4294909786
+          break;
+        case "Selected For Final Round":
+          user.team.submission.icon = 62461
+          user.team.submission.iconColor = 4280287115
+          break;
+        default:
+          // code block
+      }
       return res.status(200).json({
         success: true,
         user,
