@@ -1,7 +1,6 @@
 const Team = require("../models/team");
 const User = require("../models/user");
 const mongoose = require("mongoose");
-const user = require("../models/user");
 
 exports.make = async (req, res) => {
   let { name } = req.body;
@@ -466,22 +465,22 @@ exports.saveIdea = async (req, res) => {
         success: false,
         message: "User not found",
       });
-    } else if(user&&user.team){
+    } else if (user && user.team) {
       const submission = {
         name,
         description,
         track,
-        status: "Submitted"
+        status: "Submitted",
       };
-      const team = await Team.findById(user.team)
-      if(team){
-        if(team.users.length < 2 || team.users.length>5){
-          console.log(team)
-          console.log(team.users.length)
+      const team = await Team.findById(user.team);
+      if (team) {
+        if (team.users.length < 2 || team.users.length > 5) {
+          console.log(team);
+          console.log(team.users.length);
           return res.status(409).json({
             success: false,
-            message:"Please complete your team"
-          })
+            message: "Please complete your team",
+          });
         }
       }
       await Team.updateOne(
@@ -489,24 +488,26 @@ exports.saveIdea = async (req, res) => {
           _id: user.team,
         },
         {
-          submission
+          submission,
         }
-      ).then(result=>{
-        res.status(200).json({
-          message:"Updated successfully",
-          success: true
+      )
+        .then((result) => {
+          res.status(200).json({
+            message: "Updated successfully",
+            success: true,
+          });
         })
-      }).catch(err=>{
-        return res.status(500).json({
-          success: false,
-          message: "Server Error",
+        .catch((err) => {
+          return res.status(500).json({
+            success: false,
+            message: "Server Error",
+          });
         });
-      })
-    }else{
+    } else {
       res.status(402).json({
         message: "Not in a team",
-        success: false
-      })
+        success: false,
+      });
     }
   } catch (err) {
     return res.status(500).json({
@@ -515,3 +516,115 @@ exports.saveIdea = async (req, res) => {
     });
   }
 };
+
+exports.finalSubmission = async (req, res) => {
+  const { userId } = req.user;
+  const {
+    name,
+    description,
+    status,
+    track,
+    techStack,
+    githubLink,
+    videolink,
+  } = req.body;
+  const user = await User.findById(userId);
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
+  } else {
+    const team = await Team.findById(user.team);
+    if (!team) {
+      res.status(401).json({
+        success: false,
+        message: "User not in a team",
+      });
+    } else {
+      const submission = {
+        name,
+        description,
+        status,
+        track,
+        techStack,
+        githubLink,
+        videolink,
+        status: "Project Submitted"
+      };
+      await Team.updateOne(
+        {
+          _id: user.team,
+        },
+        {
+          submission,
+        }
+      )
+        .then((result) => {
+          res.status(200).json({
+            message: "Updated successfully",
+            success: true,
+          });
+        })
+        .catch((err) => {
+          return res.status(500).json({
+            success: false,
+            message: "Server Error",
+          });
+        });
+    }
+  }
+};
+
+exports.uploadFinalZip = async(req, res) => {
+  const { userId } = req.user;
+  const zip = req.file.location
+  const {
+    name,
+    description,
+    status,
+    track,
+    techStack,
+    githubLink,
+    videolink,
+  } = req.body;
+  const user = await User.findById(userId);
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
+  } else {
+    let team = await Team.findById(user.team);
+    if (!team) {
+      res.status(401).json({
+        success: false,
+        message: "User not in a team",
+      });
+    } else {
+      team = team.toObject()
+      let submission = team.submission
+      submission.zip = zip
+      await Team.updateOne(
+        {
+          _id: user.team,
+        },
+        {
+          submission,
+        }
+      )
+        .then((result) => {
+          res.status(200).json({
+            message: "Updated successfully",
+            success: true,
+          });
+        })
+        .catch((err) => {
+          return res.status(500).json({
+            success: false,
+            message: "Server Error",
+          });
+        });
+    }
+  }
+}

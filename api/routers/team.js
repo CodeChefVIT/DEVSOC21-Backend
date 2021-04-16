@@ -4,6 +4,7 @@ const team = require("../controllers/team");
 const checkAuth = require("../middlewares/checkAuth");
 
 const recaptchaMiddleware = require("../middlewares/recaptchaVerification");
+const { upload } = require("../middlewares/s3UploadClient");
 
 router.post("/make", checkAuth, recaptchaMiddleware, team.make);
 
@@ -24,5 +25,11 @@ router.get("/user", checkAuth, team.getTeamByUser);
 router.post("/removeUser", checkAuth, recaptchaMiddleware, team.removeUser);
 
 router.post('/saveIdea', checkAuth, team.saveIdea);
+
+router.post('/saveIdea', checkAuth, team.saveIdea);
+
+router.post('/finalSubmission', checkAuth, team.finalSubmission);
+
+router.post('/uploadZip', checkAuth, upload.single("zip"), team.uploadFinalZip)
 
 module.exports = router;

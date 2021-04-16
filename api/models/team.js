@@ -16,7 +16,8 @@ const teamSchema = mongoose.Schema(
       status: { type: String, default: "Not Submitted" },
       track: { type: String, default: "Open Innovation" },
       techStack: { type: String },
-      link: { type: String },
+      githubLink: { type: String },
+      videolink: { type: String },
       zip: { type: String },
     },
 
