@@ -4,6 +4,7 @@ const { sendEmail } = require("../../config/emailScript");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const ReviewOne = require("../models/ReviewOne");
+const { OTP } = require('../../config/sendOTP')
 
 let announcements = [
   {
@@ -222,12 +223,13 @@ exports.getAppOTP = async (req, res) => {
         }
       )
         .then(async (result) => {
+          const html = OTP(otp.toUpperCase())
           //// SEND EMAIL
           await sendEmail(
             process.env.SES_EMAIL,
             user.email,
             `OTP for App Login`,
-            otp
+            html
           );
           return res.status(200).json({
             message: "OTP Sent",
