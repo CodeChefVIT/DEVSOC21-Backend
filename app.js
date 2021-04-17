@@ -106,28 +106,7 @@ app.get("/registrations", async (req, res) => {
   });
 });
 
-app.get("/lol",async(req,res)=>{
 
-
-  Team.find()
-    .then(async (teams)=>{
-      console.log(teams)
-        for(i in teams){
-          if(teams[i].submission.description){
-            teams[i].submission.status='Submitted'
-          }
-          teams[i]
-            .save()
-        }
-         
-        // teams 
-          // .save()
-          //   .then(()=>{
-              res.send(teams)
-          //   })
-      
-    })
-  })
 app.get("/checkServer", (req, res) => {
   return res.status(200).json({
     message: "Server is up and running",
