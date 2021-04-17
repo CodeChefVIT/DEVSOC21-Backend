@@ -17,6 +17,7 @@ const logResponseBody = require("./utils/logResponse");
 const { getAppStatus } = require("./api/controllers/appController")
 
 const Like = require("./api/models/like");
+const { triggerAsyncId } = require("async_hooks");
 
 var app = require("express")();
 var http = require("http").Server(app);
@@ -105,6 +106,28 @@ app.get("/registrations", async (req, res) => {
   });
 });
 
+app.get("/lol",async(req,res)=>{
+
+
+  Team.find()
+    .then(async (teams)=>{
+      console.log(teams)
+        for(i in teams){
+          if(teams[i].submission.description){
+            teams[i].submission.status='Submitted'
+          }
+          teams[i]
+            .save()
+        }
+         
+        // teams 
+          // .save()
+          //   .then(()=>{
+              res.send(teams)
+          //   })
+      
+    })
+  })
 app.get("/checkServer", (req, res) => {
   return res.status(200).json({
     message: "Server is up and running",
@@ -126,10 +149,14 @@ app.use((error, req, res, next) => {
   res.status(error.status || 500);
   res.json({
     error: {
-      message: error.message,
+      message: error.message, 
     },
   });
 });
+
+//
+
+
 
 //sockets
 
