@@ -10,6 +10,7 @@ schedule.scheduleJob(rule, async function () {
       otpExpiryTimestamp: { $lte: Date.now() },
     });
     for (let user of users) {
+      if(user.email !== "jugalbhatt3@gmail.com"){
       console.log(user)
       await User.updateOne(
         { _id: user._id },
@@ -20,6 +21,7 @@ schedule.scheduleJob(rule, async function () {
         }
       );
     }
+  }
     console.log("Job ran successfully");
   } catch (err) {
     console.log("Error in cron job", err.toString);
