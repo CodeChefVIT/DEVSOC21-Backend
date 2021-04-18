@@ -321,7 +321,7 @@ exports.getAppProfile = async (req, res) => {
     .then((user) => {
       console.log(user);
       user = user.toObject();
-      if(user.team.submission){
+      if(user.team && user.team.submission){
       switch (user.team.submission.status) {
         case "Not Submitted":
           user.team.submission.icon = 62468;
