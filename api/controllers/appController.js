@@ -293,7 +293,7 @@ exports.checkAppOTP = async (req, res) => {
           expiresIn: "30d",
         }
       );
-      if(user !== 'jugalbhatt3@gmail.com'){
+      if(user.email !== 'jugalbhatt3@gmail.com'){
         console.log("hello")
         await User.updateOne(
           {
