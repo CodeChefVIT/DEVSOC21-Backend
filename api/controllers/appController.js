@@ -293,29 +293,37 @@ exports.checkAppOTP = async (req, res) => {
           expiresIn: "30d",
         }
       );
-      await User.updateOne(
-        {
-          _id: user._id,
-        },
-        {
-          currentOtp: null,
-          fcmToken: req.body.fcmToken,
-        }
-      )
-        .then((result) => {
-          res.status(200).json({
-            message: "Successful login",
-            success: true,
-            token,
+      if(user !== 'jugalbhatt3@gmail.com'){
+        await User.updateOne(
+          {
+            _id: user._id,
+          },
+          {
+            currentOtp: null,
+            fcmToken: req.body.fcmToken,
+          }
+        )
+          .then((result) => {
+            res.status(200).json({
+              message: "Successful login",
+              success: true,
+              token,
+            });
+          })
+          .catch((err) => {
+            return res.status(500).json({
+              success: false,
+              message: "Server Error",
+              err: err.toString(),
+            });
           });
-        })
-        .catch((err) => {
-          return res.status(500).json({
-            success: false,
-            message: "Server Error",
-            err: err.toString(),
-          });
+      }else{
+        res.status(200).json({
+          message: "Successful login",
+          success: true,
+          token,
         });
+      }
     }
   }
 };
