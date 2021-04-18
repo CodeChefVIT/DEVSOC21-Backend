@@ -198,9 +198,8 @@ exports.getAppOTP = async (req, res) => {
     });
   } else {
     if (user.numOtpLogins >= 1) {
-      let now =  Date.now()
       return res.status(409).json({
-        message: `Please try again in ${Math.floor((user.otpExpiryTimestamp-now)/1000)} seconds`,
+        message: "Sorry too much spam",
         success: false,
       });
     } else {
@@ -250,7 +249,7 @@ exports.getAppOTP = async (req, res) => {
 
 exports.checkAppOTP = async (req, res) => {
   const { otp, email } = req.body;
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ currentOtp: otp, email });
   if (!user) {
     res.status(401).json({
       message: "Invalid OTP",
@@ -322,6 +321,7 @@ exports.getAppProfile = async (req, res) => {
     .then((user) => {
       console.log(user);
       user = user.toObject();
+      if(user.team.submission){
       switch (user.team.submission.status) {
         case "Not Submitted":
           user.team.submission.icon = 62468;
@@ -362,6 +362,7 @@ exports.getAppProfile = async (req, res) => {
         default:
           user.team.submission.icon = 62461;
           user.team.submission.iconColor = 4280287115;
+      }
       }
       return res.status(200).json({
         success: true,
