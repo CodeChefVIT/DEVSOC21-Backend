@@ -294,6 +294,7 @@ exports.checkAppOTP = async (req, res) => {
         }
       );
       if(user !== 'jugalbhatt3@gmail.com'){
+        console.log("hello")
         await User.updateOne(
           {
             _id: user._id,
@@ -318,6 +319,7 @@ exports.checkAppOTP = async (req, res) => {
             });
           });
       }else{
+        console.log("hello1")
         res.status(200).json({
           message: "Successful login",
           success: true,
