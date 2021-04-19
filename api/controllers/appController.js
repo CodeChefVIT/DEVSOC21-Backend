@@ -205,7 +205,7 @@ exports.getAppOTP = async (req, res) => {
   } else {
     if (user.numOtpLogins >= 1) {
       let now = Date.now()
-      let time = user.otpExpiryTimestamp-now)/1000
+      let time = user.otpExpiryTimestamp-now/1000
       if(time<=0){
         return res.status(409).json({
           message: `Please try again in some time`,
