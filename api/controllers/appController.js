@@ -495,6 +495,10 @@ exports.logoutApp = async (req, res) => {
     },
     {
       fcmToken: null,
+      otpTimestamp:null,
+      otpExpiryTimestamp:null,
+      currentOtp:null
+
     }
   )
     .then((result) => {
