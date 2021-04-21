@@ -15,6 +15,7 @@ router.post('/joinInvite', recaptchaMiddleware, user.join);
 
 router.patch('/cancelInvite', checkAuth, recaptchaMiddleware, user.cancelInvite)
 
+router.get('/notInTeam',user.notInTeam)
 // router.get('/sendFCM', user.sendFCM)
 
 module.exports = router;

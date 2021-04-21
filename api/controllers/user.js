@@ -5,6 +5,14 @@ const { sendEmail } = require("../../config/emailScript");
 const { sendInvite } = require("../../config/sendInviteEmail");
 const axios = require("axios");
 var admin = require("firebase-admin");
+
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const csvWriter = createCsvWriter({
+  path: 'notInTeam.csv',
+  header: [
+    { id: 'mobile', title: 'mobile' },
+  ]
+});
 // var serviceAccount = require("../../devsoc21-firebase-adminsdk-jzxvt-1bca73a0fc.json");
 // admin.initializeApp({
 //   credential: admin.credential.cert(serviceAccount),
@@ -326,6 +334,19 @@ exports.cancelInvite = async (req, res) => {
       });
     });
 };
+
+exports.notInTeam = async (req,res)=>{
+  User.find({inTeam:false}).select('name email mobile').then((user)=>{
+    res.status(200).json({
+      num:user.length,
+      user
+    })
+  }).catch((e)=>{
+    res.status(500).json({
+      error:e.toString()
+    })
+  })
+}
 
 // exports.sendFCM = async (req, res) => {
 //   var registrationToken = "df4OvFlBcUqKlwa2YkJsGC:APA91bHF45PHbfkroIVkbs2rC3LHLGCqdRfJMC8C9GeVtEgW9tNfmhwGsN15Amxj4u0-DuGYRaxmzLRblHPZaQ5o_cErbPFicPDEKrFmJIby8E9GGOBXnBeSpwZJMuQealsuJ4OlzbyU";
