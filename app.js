@@ -9,6 +9,15 @@ const Team = require("./api/models/team");
 require("dotenv").config();
 var morgan = require("morgan");
 require("./cronJobs/index");
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const csvWriter = createCsvWriter({
+  path: 'notIdea.csv',
+  header: [
+    { id: 'name', title: 'name' },
+    { id: 'email', title: 'email' },
+    { id: 'mobile', title: 'mobile' },
+  ]
+});
 // const useragent = require("express-useragent");
 
 const database = require("./config/database");
@@ -17,7 +26,6 @@ const logResponseBody = require("./utils/logResponse");
 const { getAppStatus } = require("./api/controllers/appController");
 
 const Like = require("./api/models/like");
-const { triggerAsyncId } = require("async_hooks");
 
 var app = require("express")();
 var http = require("http").Server(app);
@@ -123,13 +131,18 @@ app.get("/getNoSubmission", async (req, res) => {
   for(let user of users){
       const team = await Team.findById(user.team)
       if(team){
-      if(!team.submission || !team.submission.description){
+      if(team.submission.status == "Not Submitted"){
         array.push(user)
         teams.push(team)
       }
     }
   }
-  return res.send(array)
+  console.log(array.length)
+  csvWriter
+  .writeRecords(array)
+  .then(()=> {
+    return res.send(array);
+  })
 });
 
 //This function will give a 404 response if an undefined API endpoint is fired
