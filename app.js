@@ -116,9 +116,9 @@ if (process.env.NODE_ENV == "development") {
   app.use("/dev", require("./api/routes/dev.routes"));
 }
 
-app.get("/getNoSubmission", async (req, res) => {
-  const users = await User.find({"IMAGE URL":{$exists:false}})
-});
+// app.get("/getNoSubmission", async (req, res) => {
+//   const users = await User.find({"IMAGE URL":{$exists:false}})
+// });
 
 //This function will give a 404 response if an undefined API endpoint is fired
 app.use((req, res, next) => {
