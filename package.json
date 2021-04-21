@@ -31,6 +31,7 @@
     "googleapis": "^70.0.0",
     "helmet": "^4.4.1",
     "http": "0.0.1-security",
+    "json2csv": "^5.0.6",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.2",
     "morgan": "^1.10.0",

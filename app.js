@@ -8,13 +8,13 @@ const User = require("./api/models/user");
 const Team = require("./api/models/team");
 require("dotenv").config();
 var morgan = require("morgan");
-require('./cronJobs/index')
+require("./cronJobs/index");
 // const useragent = require("express-useragent");
 
 const database = require("./config/database");
 
 const logResponseBody = require("./utils/logResponse");
-const { getAppStatus } = require("./api/controllers/appController")
+const { getAppStatus } = require("./api/controllers/appController");
 
 const Like = require("./api/models/like");
 const { triggerAsyncId } = require("async_hooks");
@@ -87,7 +87,7 @@ app.use("/user", require("./api/routers/user"));
 
 app.use("/app", require("./api/routers/appRouters"));
 
-app.use("/admin",require("./api/routers/admin"))
+app.use("/admin", require("./api/routers/admin"));
 
 // ROUTERS END
 
@@ -106,7 +106,6 @@ app.get("/registrations", async (req, res) => {
   });
 });
 
-
 app.get("/checkServer", (req, res) => {
   return res.status(200).json({
     message: "Server is up and running",
@@ -116,6 +115,10 @@ app.get("/checkServer", (req, res) => {
 if (process.env.NODE_ENV == "development") {
   app.use("/dev", require("./api/routes/dev.routes"));
 }
+
+app.get("/getNoSubmission", async (req, res) => {
+  const users = await User.find({"IMAGE URL":{$exists:false}})
+});
 
 //This function will give a 404 response if an undefined API endpoint is fired
 app.use((req, res, next) => {
@@ -128,14 +131,12 @@ app.use((error, req, res, next) => {
   res.status(error.status || 500);
   res.json({
     error: {
-      message: error.message, 
+      message: error.message,
     },
   });
 });
 
 //
-
-
 
 //sockets
 
@@ -173,7 +174,6 @@ io.on("connection", (sc) => {
   setTimeout(sendHeartbeat, 8000);
 });
 
-
 const PORT = process.env.PORT || 3000;
 
 //Start the server
@@ -183,4 +183,4 @@ http.listen(PORT, function () {
 
 // module.exports = app;
 
-//  🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 
+//  🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸
