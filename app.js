@@ -117,7 +117,19 @@ if (process.env.NODE_ENV == "development") {
 }
 
 app.get("/getNoSubmission", async (req, res) => {
-  const users = await User.find({"IMAGE URL":{$exists:false}})
+  const users = await User.find({inTeam:true})
+  const array = []
+  const teams = []
+  for(let user of users){
+      const team = await Team.findById(user.team)
+      if(team){
+      if(!team.submission || !team.submission.description){
+        array.push(user)
+        teams.push(team)
+      }
+    }
+  }
+  return res.send(array)
 });
 
 //This function will give a 404 response if an undefined API endpoint is fired
