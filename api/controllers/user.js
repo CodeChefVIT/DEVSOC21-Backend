@@ -10,7 +10,10 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const csvWriter = createCsvWriter({
   path: 'notInTeam.csv',
   header: [
-    { id: 'mobile', title: 'mobile' },
+    { id: '_id',title:'id' },
+    {id:'name',title:'name'},
+    {id:'email',title:'email'},
+    {id:'mobile',title:'title'}
   ]
 });
 // var serviceAccount = require("../../devsoc21-firebase-adminsdk-jzxvt-1bca73a0fc.json");
@@ -336,10 +339,14 @@ exports.cancelInvite = async (req, res) => {
 };
 
 exports.notInTeam = async (req,res)=>{
-  User.find({inTeam:false}).select('name email mobile').then((user)=>{
+  User.find({inTeam:false}).select('name email mobile').then(async (user)=>{
+      await csvWriter
+    .writeRecords(user)
+    .then(() => console.log('The CSV file was written successfully')).catch((err) => {
+      console.log(err)
+    })
     res.status(200).json({
       num:user.length,
-      user
     })
   }).catch((e)=>{
     res.status(500).json({
