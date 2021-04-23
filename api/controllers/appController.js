@@ -503,7 +503,8 @@ exports.logoutApp = async (req, res) => {
       fcmToken: null,
       otpTimestamp:null,
       otpExpiryTimestamp:null,
-      currentOtp:null
+      currentOtp:null,
+      numOtpLogins:0
 
     }
   )
