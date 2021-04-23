@@ -10,6 +10,8 @@ require("dotenv").config();
 var morgan = require("morgan");
 require("./cronJobs/index");
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const csv = require('csv-parser')
+const fs = require('fs')
 const csvWriter = createCsvWriter({
   path: 'notIdea.csv',
   header: [
@@ -144,6 +146,35 @@ app.get("/getNoSubmission", async (req, res) => {
     return res.send(array);
   })
 });
+const csvwrite = createCsvWriter({
+  path: 'bulk2.csv',
+  header: [
+    { id: 'Email', title: 'Email' },
+  ]
+});
+app.get('/bulkCsv', async(req, res)=>{
+  const array = []
+  const results =[]
+  fs.createReadStream('all.csv')
+  .pipe(csv())
+  .on('data', (data) => { results.push(data) })
+  .on('end', async () => {
+    for(i in results){
+      console.log(i)
+    const user = await User.findOne({email: results[i].Email})
+      if(!user){
+        array.push(results[i])
+      }
+    }
+    csvwrite
+    .writeRecords(array)
+    .then(()=> {
+      return res.send(array);
+    })
+    // sendMail("nousernameidea0709@gmail.com")
+  },
+)
+})
 
 //This function will give a 404 response if an undefined API endpoint is fired
 app.use((req, res, next) => {
@@ -208,4 +239,3 @@ http.listen(PORT, function () {
 
 // module.exports = app;
 
-//  🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸 🇺🇸
