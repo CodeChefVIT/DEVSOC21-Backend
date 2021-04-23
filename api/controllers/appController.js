@@ -263,10 +263,10 @@ exports.getAppOTP = async (req, res) => {
 };
 
 exports.checkAppOTP = async (req, res) => {
-  const { email } = req.body;
+  const { email, otp } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
-    res.status(401).json({
+    return res.status(401).json({
       message: "Invalid OTP",
       success: false,
     });
@@ -284,11 +284,17 @@ exports.checkAppOTP = async (req, res) => {
           numOtpLogins: 0,
         }
       );
-      res.status(402).json({
+      return res.status(402).json({
         message: "OTP expired",
         success: false,
       });
     } else {
+      if(user.currentOtp != otp){
+        return res.status(401).json({
+          message: "Invalid OTP",
+          success: false,
+        });
+      }
       // Generate JWT and send
       const token = jwt.sign(
         {
