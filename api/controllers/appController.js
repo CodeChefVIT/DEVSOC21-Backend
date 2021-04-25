@@ -430,7 +430,8 @@ exports.changeAnnouncements = async (req, res) => {
 };
 
 exports.getForm = async (req, res) => {
-  res.status(200).json({ form });
+  res.status(407).json({ message: "No form available right now"});
+  //res.status(200).json({ form });
 };
 
 exports.submitform = async (req, res) => {
