@@ -3,7 +3,9 @@ const Team = require("../models/team");
 const mongoose = require("mongoose");
 const { sendEmail } = require("../../config/emailScript");
 const { sendInvite } = require("../../config/sendInviteEmail");
+const pdf = require('html-pdf');
 const axios = require("axios");
+const certicifateTemplate = require("../../config/certificateHtml")
 var admin = require("firebase-admin");
 // var serviceAccount = require("../../devsoc21-firebase-adminsdk-jzxvt-1bca73a0fc.json");
 // admin.initializeApp({
@@ -332,14 +334,14 @@ exports.cancelInvite = async (req, res) => {
 
 //   var message = {
 //     token: registrationToken,
-    
+
 //     notification: {
 //       title: "Match update",
 //       body: "Arsenal goal in added time, score is now 3-0",
 //     },
 //     data: {
 //       "click_action": "FLUTTER_NOTIFICATION_CLICK",
-//       "sound": "default", 
+//       "sound": "default",
 //       "status": "done",
 //       "screen": "screenA",
 //     },
@@ -354,7 +356,6 @@ exports.cancelInvite = async (req, res) => {
 //       },
 //     },
 //   };
-
 
 //   // Send a message to the device corresponding to the provided
 //   // registration token.
@@ -371,3 +372,65 @@ exports.cancelInvite = async (req, res) => {
 //       res.send(error)
 //     });
 // };
+
+exports.generateCertificate = async (req, res, next) => {
+  let html;
+  const { userId } = req.user;
+  const user = await User.findById(userId);
+  if (user.certificate || user.certificate != "") {
+    return res.status(200).json({
+      message: "Certificate Already Generated",
+      link: user.certificate,
+    });
+  }
+  html = certicifateTemplate.generateParticipantTemplate(users[i], data.Location, users[i].link);
+  const filename = `${user.name}_DEVSOC'21`;
+  await pdf
+    .create(html, { height: "608px", width: "1080px", timeout: "100000" })
+    .toStream(async function (err, stream) {
+      if (err) return console.log(err);
+      if (i == users.length - 1) {
+        await uploadToS3(res, stream, filename, userId);
+      } else {
+        await uploadToS3(res, stream, filename, userId);
+      }
+    });
+  console.log(users);
+};
+
+const uploadToS3 = async (res, body, filename, userId) => {
+  AWS.config.update({
+    accessKeyId: process.env.AWS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS,
+  });
+
+  var s3 = new AWS.S3();
+
+  var params = {
+    Body: body,
+    ACL: "public-read",
+    Bucket: process.env.AWS_S3_BUCKET,
+    Key: filename + ".pdf",
+  };
+  await s3.upload(params, async function (err, data) {
+    console.log(err, data);
+    await User.updateOne(
+      { _id: userId },
+      {
+        certificate: data.Location,
+      }
+    )
+      .then(async () => {
+        return res.status(200).json({
+          message: "Generated",
+          certificate: data.Location,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          success: false,
+          message: "server error",
+        });
+      });
+  });
+};
