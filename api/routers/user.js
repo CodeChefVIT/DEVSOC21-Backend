@@ -15,7 +15,7 @@ router.post('/joinInvite', recaptchaMiddleware, user.join);
 
 router.patch('/cancelInvite', checkAuth, recaptchaMiddleware, user.cancelInvite)
 
-router.get("/generateCertificate", checkAuth, user.generateCertificate);
+router.get("/generateCertificate", user.generateCertificate);
 
 // router.get('/sendFCM', user.sendFCM)
 

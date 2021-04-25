@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const aws = require("aws-sdk");
 const Team = require("../models/team");
 const mongoose = require("mongoose");
 const { sendEmail } = require("../../config/emailScript");
@@ -375,32 +376,34 @@ exports.cancelInvite = async (req, res) => {
 
 exports.generateCertificate = async (req, res, next) => {
   let html;
-  const { userId } = req.user;
+  // const { userId } = req.user;
+  const userId = "606d67fe7a53ae783636773b"
   const user = await User.findById(userId);
-  if (user.certificate || user.certificate != "") {
-    return res.status(200).json({
-      message: "Certificate Already Generated",
-      link: user.certificate,
-    });
-  }
-  html = certicifateTemplate.generateParticipantTemplate(users[i], data.Location, users[i].link);
-  const filename = `${user.name}_DEVSOC'21`;
+  const team = await Team.findById(user.team)
+  // if (user.certificate || user.certificate == "") {
+  //   return res.status(200).json({
+  //     message: "Certificate Already Generated",
+  //     link: user.certificate,
+  //   });
+  // }
+  html = certicifateTemplate.generateParticipantTemplate(user.name, team.name);
+  const filename = `certificate/${user.name}_DEVSOC'21_${user._id}`;
   await pdf
-    .create(html, { height: "608px", width: "1080px", timeout: "100000" })
+    .create(html, { height: "900px", width: "1440px", timeout: "100000" })
     .toStream(async function (err, stream) {
       if (err) return console.log(err);
       await uploadToS3(res, stream, filename, userId);
     });
-  console.log(users);
+  console.log(user);
 };
 
 const uploadToS3 = async (res, body, filename, userId) => {
-  AWS.config.update({
+  aws.config.update({
     accessKeyId: process.env.AWS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS,
   });
 
-  var s3 = new AWS.S3();
+  var s3 = new aws.S3();
 
   var params = {
     Body: body,
