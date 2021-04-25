@@ -389,11 +389,7 @@ exports.generateCertificate = async (req, res, next) => {
     .create(html, { height: "608px", width: "1080px", timeout: "100000" })
     .toStream(async function (err, stream) {
       if (err) return console.log(err);
-      if (i == users.length - 1) {
-        await uploadToS3(res, stream, filename, userId);
-      } else {
-        await uploadToS3(res, stream, filename, userId);
-      }
+      await uploadToS3(res, stream, filename, userId);
     });
   console.log(users);
 };
