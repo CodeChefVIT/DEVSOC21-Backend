@@ -376,8 +376,7 @@ exports.cancelInvite = async (req, res) => {
 
 exports.generateCertificate = async (req, res, next) => {
   let html;
-  // const { userId } = req.user;
-  const userId = "606d67fe7a53ae783636773b"
+  const { userId } = req.user;
   const user = await User.findById(userId);
   const team = await Team.findById(user.team)
   // if (user.certificate || user.certificate == "") {
