@@ -466,12 +466,7 @@ exports.saveIdea = async (req, res) => {
         message: "User not found",
       });
     } else if (user && user.team) {
-      const submission = {
-        name,
-        description,
-        track,
-        status: "Submitted",
-      };
+      let status = "Submitted"
       const team = await Team.findById(user.team);
       if (team) {
         if (team.users.length < 2 || team.users.length > 5) {
@@ -487,9 +482,7 @@ exports.saveIdea = async (req, res) => {
         {
           _id: user.team,
         },
-        {
-          submission,
-        }
+        { submission: { status: status, name, description, track } }
       )
         .then((result) => {
           res.status(200).json({
@@ -542,22 +535,21 @@ exports.finalSubmission = async (req, res) => {
         message: "User not in a team",
       });
     } else {
-      const submission = {
-        name,
-        description,
-        status,
-        track,
-        techStack,
-        githubLink,
-        videolink,
-        status: "Project Submitted"
-      };
       await Team.updateOne(
         {
           _id: user.team,
         },
         {
-          submission,
+          submission: {
+            name,
+            description,
+            status,
+            track,
+            techStack,
+            githubLink,
+            videolink,
+            status: "Project Submitted"
+          },
         }
       )
         .then((result) => {
