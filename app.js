@@ -205,7 +205,7 @@ function sendHeartbeat() {
 io.on("connection", (sc) => {
   console.log(`Socket ${sc.id} connected.`);
 
-  io.sockets.emit("connect", `Socket ${sc.id} connected.`);
+  // io.sockets.emit("connect", `Socket ${sc.id} connected.`);
   sc.on("pong", function (data) {
     console.log("Pong received from client");
   });
