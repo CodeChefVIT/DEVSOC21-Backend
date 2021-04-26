@@ -308,6 +308,7 @@ exports.displayAll = async (req, res) => {
       _id:1,
       "users._id":'$user._id',
       "users.name":'$user.name',
+      "users.email":'$user.email',
       "name":"$name",
       "leader.name":"$leader.name",
     }
