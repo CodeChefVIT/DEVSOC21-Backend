@@ -275,10 +275,61 @@ exports.leave = async (req, res) => {
 };
 
 exports.displayAll = async (req, res) => {
-  Team.find({})
-    .populate({ path: "leader", select: "_id name" })
-    .populate({ path: "users", select: "_id name email" })
-    .select("-code -idea -avatar -submission -updatedAt -__v ")
+  Team.aggregate([
+    {   $match:  {}},
+    {
+      $lookup: {
+        from: "users",
+        localField: "leader",
+        foreignField: "_id",
+        as: "leader",
+      },
+    },{
+      $unwind: {path:'$leader',preserveNullAndEmptyArrays: false}
+    },
+    {
+      $unwind:{path:'$users',preserveNullAndEmptyArrays:true}
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "users",
+        foreignField: "_id",
+        as: "user",
+      },
+
+    },
+    {
+      $unwind:'$user'
+    },
+ 
+  {
+    $project:{
+      _id:1,
+      "users._id":'$user._id',
+      "users.name":'$user.name',
+      "name":"$name",
+      "leader.name":"$leader.name",
+    }
+  },
+  {
+    $group:{
+      _id:'$_id',
+      users:{$push:'$users'},
+      name:{$addToSet:'$name'},
+      'leader':{$addToSet:'$leader'}
+    }
+  },
+  {
+    $unwind:'$name'
+  },{
+    $unwind:'$leader'
+  }
+  ])
+  // Team.find({})
+    // .populate({ path: "leader", select: "_id name" })
+    // .populate({ path: "users", select: "_id name email" })
+    // .select("-code -idea -avatar -submission -updatedAt -__v ")
     .then((teams) => {
       res.status(200).json({
         teams,

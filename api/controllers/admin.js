@@ -42,10 +42,24 @@ exports.login = async (req, res) => {
 };
 
 exports.displayAll = async (req, res) => {
-  Team.find({})
-    .populate({ path: "leader", select: "_id name" })
-    .populate({ path: "users", select: "_id name email" })
-    .select("-code -idea -avatar  -updatedAt -__v ")
+  Team.aggregate([
+{   $match: { _id : $all } },
+{
+  $lookup: {
+    from: "users",
+    localField: "leader",
+    foreignField: "_id",
+    as: "leader",
+  },
+},{
+  $unwind: {path:'$leader',preserveNullAndEmptyArrays: false}
+},
+
+  ]) 
+  // Team.find({})
+  //   .populate({ path: "leader", select: "_id name" })
+  //   .populate({ path: "users", select: "_id name email" })
+  //   .select("-code -idea -avatar  -updatedAt -__v ")
     .then((teams) => {
       res.status(200).json({
         teams,
