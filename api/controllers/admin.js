@@ -86,9 +86,11 @@ exports.submissionByName = async (req, res) => {
 exports.submissionStatus = async (req, res) => {
   const { status, teamId } = req.body;
   if (teamId) {
+    let {submission} = await Team.findById(teamId)
+    submission.status = status
     await Team.findOneAndUpdate(
       { _id: teamId },
-      { submission: { status: status } },
+      { submission},
       { new: true }
     )
       .then((team) => {
