@@ -21,7 +21,12 @@ const csvWriter = createCsvWriter({
   ]
 });
 // const useragent = require("express-useragent");
+const firebase = require('firebase')
+const {firebaseConfig} = require('./config/firebase')
 
+firebase.initializeApp(firebaseConfig)
+
+const firebaseDb = firebase.firestore() 
 const database = require("./config/database");
 
 const logResponseBody = require("./utils/logResponse");
@@ -29,6 +34,34 @@ const { getAppStatus } = require("./api/controllers/appController");
 
 const Like = require("./api/models/like");
 
+// Add a new document in collection "cities"
+// db.collection("cities").doc("LA").set({
+//   name: "Los Angeles",
+//   state: "CA",
+//   country: "USA"
+// })
+// .then(() => {
+//   console.log("Document successfully written!");
+// })
+// .catch((error) => {
+//   console.error("Error writing document: ", error);
+// });
+
+// firebaseDb.collection("users").add({
+//   first: "Ada",
+//   last: "Lovelace",
+//   born: ['l','o','l']
+// })
+// .then((docRef) => {
+//   console.log("Document written with ID: ", docRef.id);
+// })
+// .catch((error) => {
+//   console.error("Error adding document: ", error);
+// });
+
+firebaseDb.collection("users").doc("JCAy1aLBgDrsSbFcvgOQ").update({
+  born: firebase.firestore.FieldValue.arrayUnion('gaandu')
+})
 var app = require("express")();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
