@@ -33,6 +33,7 @@ const logResponseBody = require("./utils/logResponse");
 const { getAppStatus } = require("./api/controllers/appController");
 
 const Like = require("./api/models/like");
+// const like = require("./api/models/like");no
 
 // Add a new document in collection "cities"
 // db.collection("cities").doc("LA").set({
@@ -48,9 +49,8 @@ const Like = require("./api/models/like");
 // });
 
 // firebaseDb.collection("users").add({
-//   first: "Ada",
-//   last: "Lovelace",
-//   born: ['l','o','l']
+//   team:'FS',
+//   likes: []
 // })
 // .then((docRef) => {
 //   console.log("Document written with ID: ", docRef.id);
@@ -59,9 +59,6 @@ const Like = require("./api/models/like");
 //   console.error("Error adding document: ", error);
 // });
 
-firebaseDb.collection("users").doc("JCAy1aLBgDrsSbFcvgOQ").update({
-  born: firebase.firestore.FieldValue.arrayUnion('gaandu')
-})
 var app = require("express")();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
@@ -229,6 +226,44 @@ app.use((error, req, res, next) => {
 
 //sockets
 
+firebaseDb.collection("users").get().then((snapshot) => {
+  // console.log(snapshot.docs)
+  snapshot.docs.forEach(doc => {
+    let items = doc.data();
+    console.log(items)
+    
+});
+})
+
+
+const count =async(user,team)=>{
+  firebaseDb.collection("users").get().then((snapshot) => {
+    // console.log(snapshot.docs)
+    array=[]
+    snapshot.docs.forEach(doc => {
+      let items = doc.data();
+      console.log(items)
+      array.append(items)
+  });
+  })
+  return array
+}
+
+const unlike = async(user,team)=>{
+  
+  firebaseDb.collection("teams").doc("team").update({
+    born: firebase.firestore.FieldValue.arrayRemove('user')
+  })
+}
+const like = async(user,team)=>{
+  
+firebaseDb.collection("teams").doc("team").update({
+  born: firebase.firestore.FieldValue.arrayUnion('user')
+})
+
+return 
+}
+
 //to keep connection alive
 function sendHeartbeat() {
   setTimeout(sendHeartbeat, 8000);
@@ -246,18 +281,19 @@ io.on("connection", (sc) => {
   });
 
   sc.on("like", async (userId, teamId) => {
-    await Like.updateOne(
-      { teamId },
-      { $addToSet: { likes: userId } },
-      { new: true }
-    )
-      .then((result) => {
+    like(userId,teamId)
+    // await Like.updateOne(
+    //   { teamId },
+    //   { $addToSet: { likes: userId } },
+    //   { new: true }
+    // )
+    //   .then((result) => {
         // console.log(result)
-        io.sockets.emit("count", { teamId: result.likes.length });
-      })
-      .catch((e) => {
-        console.log(e.toString());
-      });
+     await io.sockets.emit("count", count());
+      // })
+      // .catch((e) => {
+      //   console.log(e.toString());
+      // });
   });
   setTimeout(sendHeartbeat, 8000);
 });
