@@ -91,10 +91,11 @@ exports.displayAll = async (req, res) => {
     }
   },
   {
-    $unwind:'$name',
     $unwind:'$submission'
   },{
     $unwind:'$leader'
+  },{
+    $unwind:'$name',
   }
   ])
   // Team.find({})
