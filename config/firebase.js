@@ -1,6 +1,6 @@
 
 exports.firebaseConfig = {
-  apiKey: "",
+  apiKey: "AIzaSyA4AWtOC23yLbWsXvXkYSbHmga8hHdrkZI",
   authDomain: "ezezezez-c16ca.firebaseapp.com",
   projectId: "ezezezez-c16ca",
   storageBucket: "ezezezez-c16ca.appspot.com",

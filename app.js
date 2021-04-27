@@ -48,7 +48,7 @@ const Like = require("./api/models/like");
 //   console.error("Error writing document: ", error);
 // });
 
-// firebaseDb.collection("users").add({
+// firebaseDb.collection("teams").add({
 //   team:'FS',
 //   likes: []
 // })
