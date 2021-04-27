@@ -15,4 +15,6 @@ router.get("/name",checkAdmin,admin.submissionByName)
 
 router.patch("/status",checkAdmin,admin.submissionStatus);
 
+router.patch("/setTags",checkAdmin,admin.setTags);
+
 module.exports = router

@@ -19,6 +19,7 @@ const teamSchema = mongoose.Schema(
       githubLink: { type: String },
       videolink: { type: String },
       zip: { type: String },
+      tags: { type: Array },
     },
 
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],

@@ -275,10 +275,62 @@ exports.leave = async (req, res) => {
 };
 
 exports.displayAll = async (req, res) => {
-  Team.find({})
-    .populate({ path: "leader", select: "_id name" })
-    .populate({ path: "users", select: "_id name email" })
-    .select("-code -idea -avatar -submission -updatedAt -__v ")
+  Team.aggregate([
+    {   $match:  {}},
+    {
+      $lookup: {
+        from: "users",
+        localField: "leader",
+        foreignField: "_id",
+        as: "leader",
+      },
+    },{
+      $unwind: {path:'$leader',preserveNullAndEmptyArrays: false}
+    },
+    {
+      $unwind:{path:'$users',preserveNullAndEmptyArrays:true}
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "users",
+        foreignField: "_id",
+        as: "user",
+      },
+
+    },
+    {
+      $unwind:'$user'
+    },
+ 
+  {
+    $project:{
+      _id:1,
+      "users._id":'$user._id',
+      "users.name":'$user.name',
+      "users.email":'$user.email',
+      "name":"$name",
+      "leader.name":"$leader.name",
+    }
+  },
+  {
+    $group:{
+      _id:'$_id',
+      users:{$push:'$users'},
+      name:{$addToSet:'$name'},
+      'leader':{$addToSet:'$leader'}
+    }
+  },
+  {
+    $unwind:'$name'
+  },{
+    $unwind:'$leader'
+  }
+  ])
+  // Team.find({})
+    // .populate({ path: "leader", select: "_id name" })
+    // .populate({ path: "users", select: "_id name email" })
+    // .select("-code -idea -avatar -submission -updatedAt -__v ")
     .then((teams) => {
       res.status(200).json({
         teams,
@@ -466,12 +518,7 @@ exports.saveIdea = async (req, res) => {
         message: "User not found",
       });
     } else if (user && user.team) {
-      const submission = {
-        name,
-        description,
-        track,
-        status: "Submitted",
-      };
+      let status = "Submitted"
       const team = await Team.findById(user.team);
       if (team) {
         if (team.users.length < 2 || team.users.length > 5) {
@@ -487,9 +534,7 @@ exports.saveIdea = async (req, res) => {
         {
           _id: user.team,
         },
-        {
-          submission,
-        }
+        { submission: { status: status, name, description, track } }
       )
         .then((result) => {
           res.status(200).json({
@@ -542,22 +587,21 @@ exports.finalSubmission = async (req, res) => {
         message: "User not in a team",
       });
     } else {
-      const submission = {
-        name,
-        description,
-        status,
-        track,
-        techStack,
-        githubLink,
-        videolink,
-        status: "Project Submitted"
-      };
       await Team.updateOne(
         {
           _id: user.team,
         },
         {
-          submission,
+          submission: {
+            name,
+            description,
+            status,
+            track,
+            techStack,
+            githubLink,
+            videolink,
+            status: "Project Submitted"
+          },
         }
       )
         .then((result) => {

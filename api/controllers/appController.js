@@ -99,88 +99,103 @@ exports.getAppStatus = () => {
     today: today,
     day1: [
       {
-        title: "Backend",
-        start: "2021-04-10 05:00:00",
-        end: "2021-04-10 09:00:00",
-        details: "Some big details",
+        title: "Opening Ceremony of the hackathon",
+        start: "2021-04-30 18:00:00",
+        end: "2021-04-30 17:00:00",
+        // details: "Some big details",
         image:
-          "https://lh3.googleusercontent.com/a-/AOh14Gh_Don2HuJTwTvUP_b3slI2u-SLnAMk_cBtrq125g=s96-c",
-        startVal: 5,
-        duration: 4,
+          "https://avatars.githubusercontent.com/u/72685613?s=400&u=f6c0ef74d0ae1eae896fe3966f9cfb990dd05692&v=4",
+          startVal: 18,
+        duration: 1,
+      },
+      // {
+      //   title: "The hackathon begins",
+      //   start: "2021-04-30 19:00:00",
+      //   end: "2021-04-30 20:00:00",
+      //   startVal: 19,
+      //   duration: 20,
+      // },
+      {
+        title: "Speaker Session 1",
+        start: "2021-04-30 21:00:00",
+        end: "2021-04-30 22:00:00",
+        startVal: 21,
+        duration: 1,
       },
       {
-        title: "Happy boyu hours",
-        start: "2021-04-10 12:00:00",
-        end: "2021-04-10 14:00:00",
-        startVal: 12,
-        duration: 2,
-      },
-      {
-        title: "Idea submission",
-        start: "2021-04-10 18:00:00",
-        end: "2021-04-10 20:00:00",
-        startVal: 18,
-        duration: 2,
+        title: "Speaker Session 2",
+        start: "2021-04-30 23:00:00",
+        end: "2021-04-30 00:00:00",
+        startVal: 23,
+        duration: 1,
       },
     ],
     day2: [
       {
-        title: "TL T main",
-        start: "2021-04-11 01:00:00",
-        end: "2021-04-11 02:00:00",
-        startVal: 1,
+        title: "Review 1",
+        start: "2021-05-01 09:00:00",
+        end: "2021-05-01 12:00:00",
+        startVal: 9,
+        duration: 3,
+      },
+      {
+        title: "Announcement of shortlisted teams",
+        start: "2021-05-01 13:00:00",
+        end: "2021-05-01 14:00:00",
+        startVal: 13,
         duration: 1,
       },
       {
-        title: "CodEd Hours",
-        start: "2021-04-11 04:00:00",
-        end: "2021-04-11 06:00:00",
-        startVal: 4,
-        duration: 2,
-      },
-      {
-        title: "DEVSOC Hours",
-        start: "2021-04-11 14:00:00",
-        end: "2021-04-11 17:00:00",
+        title: "Project submission starts",
+        start: "2021-05-01 14:00:00",
+        end: "2021-05-01 15:00:00",
         startVal: 14,
-        duration: 3,
+        duration: 1,
       },
       {
-        title: "Siddharth Hours",
-        start: "2021-04-11 20:00:00",
-        end: "2021-04-11 23:00:00",
-        startVal: 20,
-        duration: 3,
-      },
-    ],
-    day3: [
-      {
-        title: "Talk on GO",
-        start: "2021-04-12 07:00:00",
-        end: "2021-04-12 10:00:00",
-        startVal: 7,
-        duration: 3,
-      },
-      {
-        title: "EPIC SHIT",
-        start: "2021-04-12 18:00:00",
-        end: "2021-04-12 20:00:00",
-        startVal: 18,
-        duration: 2,
+        title: "Speaker Session 3",
+        start: "2021-05-01 17:00:00",
+        end: "2021-05-01 18:00:00",
+        startVal: 17,
+        duration: 1,
       },
       {
         title: "Review 2",
-        start: "2021-04-12 11:00:00",
-        end: "2021-04-12 12:00:00",
-        startVal: 11,
+        start: "2021-05-01 22:00:00",
+        end: "2021-05-01 00:00:00",
+        startVal: 22,
+        duration: 2,
+      },
+      
+    ],
+    day3: [
+      {
+        title: "Project submission ends",
+        start: "2021-05-02 06:00:00",
+        end: "2021-05-02 07:00:00",
+        startVal: 6,
         duration: 1,
       },
       {
-        title: "Something",
-        start: "2021-04-12 14:00:00",
-        end: "2021-04-12 15:30:00",
-        startVal: 14,
-        duration: 1.5,
+        title: "Announcement of top 15 teams",
+        start: "2021-05-02 08:00:00",
+        end: "2021-05-02 09:00:00",
+        startVal: 8,
+        duration: 1,
+      },
+      {
+        title: "Pitch by top 15 teams",
+        start: "2021-05-02 12:00:00",
+        end: "2021-05-02 14:00:00",
+        startVal: 12,
+        duration: 2,
+      },
+      {
+        title: "Valedictory ceremony",
+        start: "2021-05-02 17:00:00",
+        end: "2021-05-02 18:00:00",
+        startVal: 17,
+        duration: 1,
       },
     ],
   };
@@ -263,10 +278,10 @@ exports.getAppOTP = async (req, res) => {
 };
 
 exports.checkAppOTP = async (req, res) => {
-  const { email } = req.body;
+  const { email, otp } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
-    res.status(401).json({
+    return res.status(401).json({
       message: "Invalid OTP",
       success: false,
     });
@@ -284,11 +299,17 @@ exports.checkAppOTP = async (req, res) => {
           numOtpLogins: 0,
         }
       );
-      res.status(402).json({
+      return res.status(402).json({
         message: "OTP expired",
         success: false,
       });
     } else {
+      if(user.currentOtp != otp){
+        return res.status(401).json({
+          message: "Invalid OTP",
+          success: false,
+        });
+      }
       // Generate JWT and send
       const token = jwt.sign(
         {
@@ -424,7 +445,8 @@ exports.changeAnnouncements = async (req, res) => {
 };
 
 exports.getForm = async (req, res) => {
-  res.status(200).json({ form });
+  res.status(407).json({ message: "No form available right now"});
+  //res.status(200).json({ form });
 };
 
 exports.submitform = async (req, res) => {
@@ -497,7 +519,8 @@ exports.logoutApp = async (req, res) => {
       fcmToken: null,
       otpTimestamp:null,
       otpExpiryTimestamp:null,
-      currentOtp:null
+      currentOtp:null,
+      numOtpLogins:0
 
     }
   )

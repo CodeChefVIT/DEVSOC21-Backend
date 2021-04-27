@@ -33,6 +33,7 @@
     "firebase-admin": "^9.6.0",
     "googleapis": "^70.0.0",
     "helmet": "^4.4.1",
+    "html-pdf": "^3.0.0",
     "http": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.2",
