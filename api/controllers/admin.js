@@ -77,6 +77,7 @@ exports.displayAll = async (req, res) => {
       "users.name":'$user.name',
       "users.email":'$user.email',
       "name":"$name",
+      "submission":"$submission",
       "leader.name":"$leader.name",
     }
   },
@@ -85,6 +86,7 @@ exports.displayAll = async (req, res) => {
       _id:'$_id',
       users:{$push:'$users'},
       name:{$addToSet:'$name'},
+      submission:{$addToSet: "$submission"},
       'leader':{$addToSet:'$leader'}
     }
   },
