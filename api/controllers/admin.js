@@ -91,7 +91,8 @@ exports.displayAll = async (req, res) => {
     }
   },
   {
-    $unwind:'$name'
+    $unwind:'$name',
+    $unwind:'$submission'
   },{
     $unwind:'$leader'
   }
