@@ -595,23 +595,13 @@ exports.finalSubmission = async (req, res) => {
       submission.techStack = techStack;
       submission.githubLink = githubLink;
       submission.videolink = videolink;
+      submission.status = "Project Submitted"
       await Team.updateOne(
         {
           _id: user.team,
         },
         {
-          submission: {
-            finalName,
-            finalDescription,
-            finalTrack,
-            name,
-            track,
-            description,
-            techStack,
-            githubLink,
-            videolink,
-            status: "Project Submitted",
-          },
+          submission
         }
       )
         .then((result) => {
