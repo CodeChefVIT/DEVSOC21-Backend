@@ -276,7 +276,7 @@ exports.leave = async (req, res) => {
 
 exports.displayAll = async (req, res) => {
   Team.aggregate([
-    {   $match:  {}},
+    { $match: {} },
     {
       $lookup: {
         from: "users",
@@ -284,11 +284,12 @@ exports.displayAll = async (req, res) => {
         foreignField: "_id",
         as: "leader",
       },
-    },{
-      $unwind: {path:'$leader',preserveNullAndEmptyArrays: false}
     },
     {
-      $unwind:{path:'$users',preserveNullAndEmptyArrays:true}
+      $unwind: { path: "$leader", preserveNullAndEmptyArrays: false },
+    },
+    {
+      $unwind: { path: "$users", preserveNullAndEmptyArrays: true },
     },
     {
       $lookup: {
@@ -297,37 +298,37 @@ exports.displayAll = async (req, res) => {
         foreignField: "_id",
         as: "user",
       },
-
     },
     {
-      $unwind:'$user'
+      $unwind: "$user",
     },
- 
-  {
-    $project:{
-      _id:1,
-      "users._id":'$user._id',
-      "users.name":'$user.name',
-      "users.email":'$user.email',
-      "name":"$name",
-      "leader.name":"$leader.name",
-    }
-  },
-  {
-    $group:{
-      _id:'$_id',
-      users:{$push:'$users'},
-      name:{$addToSet:'$name'},
-      'leader':{$addToSet:'$leader'}
-    }
-  },
-  {
-    $unwind:'$name'
-  },{
-    $unwind:'$leader'
-  }
+
+    {
+      $project: {
+        _id: 1,
+        "users._id": "$user._id",
+        "users.name": "$user.name",
+        "users.email": "$user.email",
+        name: "$name",
+        "leader.name": "$leader.name",
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        users: { $push: "$users" },
+        name: { $addToSet: "$name" },
+        leader: { $addToSet: "$leader" },
+      },
+    },
+    {
+      $unwind: "$name",
+    },
+    {
+      $unwind: "$leader",
+    },
   ])
-  // Team.find({})
+    // Team.find({})
     // .populate({ path: "leader", select: "_id name" })
     // .populate({ path: "users", select: "_id name email" })
     // .select("-code -idea -avatar -submission -updatedAt -__v ")
@@ -518,7 +519,7 @@ exports.saveIdea = async (req, res) => {
         message: "User not found",
       });
     } else if (user && user.team) {
-      let status = "Submitted"
+      let status = "Submitted";
       const team = await Team.findById(user.team);
       if (team) {
         if (team.users.length < 2 || team.users.length > 5) {
@@ -565,10 +566,9 @@ exports.saveIdea = async (req, res) => {
 exports.finalSubmission = async (req, res) => {
   const { userId } = req.user;
   const {
-    name,
-    description,
-    status,
-    track,
+    finalName,
+    finalDescription,
+    finalTrack,
     techStack,
     githubLink,
     videolink,
@@ -587,20 +587,30 @@ exports.finalSubmission = async (req, res) => {
         message: "User not in a team",
       });
     } else {
+      team = team.toObject();
+      submission = team.submission;
+      submission.finalName = finalName;
+      submission.finalDescription = finalDescription;
+      submission.finalTrack = finalTrack;
+      submission.techStack = techStack;
+      submission.githubLink = githubLink;
+      submission.videolink = videolink;
       await Team.updateOne(
         {
           _id: user.team,
         },
         {
           submission: {
+            finalName,
+            finalDescription,
+            finalTrack,
             name,
-            description,
-            status,
             track,
+            description,
             techStack,
             githubLink,
             videolink,
-            status: "Project Submitted"
+            status: "Project Submitted",
           },
         }
       )
@@ -620,18 +630,9 @@ exports.finalSubmission = async (req, res) => {
   }
 };
 
-exports.uploadFinalZip = async(req, res) => {
+exports.uploadFinalZip = async (req, res) => {
   const { userId } = req.user;
-  const zip = req.file.location
-  const {
-    name,
-    description,
-    status,
-    track,
-    techStack,
-    githubLink,
-    videolink,
-  } = req.body;
+  const zip = req.file.location;
   const user = await User.findById(userId);
   if (!user) {
     return res.status(404).json({
@@ -646,9 +647,9 @@ exports.uploadFinalZip = async(req, res) => {
         message: "User not in a team",
       });
     } else {
-      team = team.toObject()
-      let submission = team.submission
-      submission.zip = zip
+      team = team.toObject();
+      let submission = team.submission;
+      submission.zip = zip;
       await Team.updateOne(
         {
           _id: user.team,
@@ -671,4 +672,4 @@ exports.uploadFinalZip = async(req, res) => {
         });
     }
   }
-}
+};
