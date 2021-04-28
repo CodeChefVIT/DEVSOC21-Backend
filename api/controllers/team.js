@@ -580,7 +580,7 @@ exports.finalSubmission = async (req, res) => {
       message: "User not found",
     });
   } else {
-    const team = await Team.findById(user.team);
+    let team = await Team.findById(user.team);
     if (!team) {
       res.status(401).json({
         success: false,
