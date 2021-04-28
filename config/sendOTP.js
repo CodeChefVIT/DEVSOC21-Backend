@@ -189,7 +189,7 @@ exports.OTP = (teamCode) => {
                                                     <br /><br /> <br /><br />
                                                     <center style="color: #f3f3f3;">
                                                         <span
-                                                            style="color: #f3f3f3;font-size: 52px;background-image: linear-gradient(to right, #2F57FE, #298CFE, #29C8FE);padding: 10px;border-radius: 10px;">${teamCode}</span>
+                                                            style="color: #f3f3f3;font-size: 45px;background-image: linear-gradient(to right, #2F57FE, #298CFE, #29C8FE);padding: 10px;border-radius: 10px;">${teamCode}</span>
                                                     </center>
                                                     <br /><br />
                                                 </p>
