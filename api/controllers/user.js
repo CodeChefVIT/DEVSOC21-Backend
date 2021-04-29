@@ -116,6 +116,11 @@ exports.getProfile = async (req, res) => {
     ) {
       is_profile_completed = false;
     }
+    let show_certificate = false
+    if(user.team.submission.status != "Not Shortlisted For DEVSOC'21"){
+      show_certificate = true
+    }
+    user.show_certificate = show_certificate
     user.is_profile_completed = is_profile_completed;
     res.status(200).json({
       success: true,
