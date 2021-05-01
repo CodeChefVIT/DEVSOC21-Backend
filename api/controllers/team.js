@@ -579,6 +579,12 @@ exports.finalSubmission = async (req, res) => {
     });
   } else {
     let team = await Team.findById(user.team);
+    if(team.submission.status != "Shortlisted For Round 2" || team.submission.status != "Project Submitted"){
+      return res.status(409).json({
+        success: false,
+        message: "User not found",
+      });
+    }
     if (!team) {
       res.status(401).json({
         success: false,
