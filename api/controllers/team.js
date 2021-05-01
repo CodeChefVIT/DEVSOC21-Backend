@@ -97,7 +97,7 @@ exports.join = async (req, res) => {
       message: "Team not found",
     });
   } else {
-    if(team.submission.finalDescription === "" || team.submission.finalDescription === null || team.submission.description === null || team.submission.description === ""){
+    if(team.submission.finalDescription !== "" || team.submission.finalDescription !== null || team.submission.description !== null || team.submission.description !== ""){
       return res.status(409).json({
         success: false,
         message: "Can't join, submitted",
