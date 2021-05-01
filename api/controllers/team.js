@@ -566,9 +566,7 @@ exports.saveIdea = async (req, res) => {
 exports.finalSubmission = async (req, res) => {
   const { userId } = req.user;
   const {
-    finalName,
     finalDescription,
-    finalTrack,
     techStack,
     githubLink,
     videolink,
@@ -589,9 +587,7 @@ exports.finalSubmission = async (req, res) => {
     } else {
       team = team.toObject();
       submission = team.submission;
-      submission.finalName = finalName;
       submission.finalDescription = finalDescription;
-      submission.finalTrack = finalTrack;
       submission.techStack = techStack;
       submission.githubLink = githubLink;
       submission.videolink = videolink;
