@@ -97,6 +97,12 @@ exports.join = async (req, res) => {
       message: "Team not found",
     });
   } else {
+    if(team.submission.finalDescription === "" || team.submission.finalDescription === null || team.submission.description === null || team.submission.description === ""){
+      return res.status(409).json({
+        success: false,
+        message: "Can't join, submitted",
+      });
+    }
     User.findById(userId)
       .then((user) => {
         if (user.inTeam) {
@@ -579,7 +585,7 @@ exports.finalSubmission = async (req, res) => {
     });
   } else {
     let team = await Team.findById(user.team);
-    if(team.submission.status !== "Shortlisted For Round 2" || team.submission.status !== "Project Submitted"){
+    if(team.submission.status !== "Shortlisted For Round 2" && team.submission.status !== "Project Submitted"){
       return res.status(409).json({
         success: false,
         message: "User not found",
