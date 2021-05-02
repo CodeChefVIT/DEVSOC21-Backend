@@ -7,6 +7,7 @@ const ReviewOne = require("../models/ReviewOne");
 const { OTP } = require('../../config/sendOTP')
 
 let announcements = [
+
   {
     title: "The final pitches are live!",
     body: "The pitches are live on our youtube channel!",
