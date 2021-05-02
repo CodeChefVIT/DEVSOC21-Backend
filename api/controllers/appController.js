@@ -8,18 +8,9 @@ const { OTP } = require('../../config/sendOTP')
 
 let announcements = [
   {
-    title: "Submissions are now live",
-    body: "Please submit your ideas",
-    link: "https://hackwith.codechefvit.com/app/submission",
-  },
-  {
-    title: "Join our discord",
-    body: "Please join our discord to get the latest updates",
-  },
-  {
-    title: "Welcome to DEVSOC'21",
-    body: "We are thrilled to have you on board with us at DEVSOC'21",
-    link: "https://hackwith.codechefvit.com",
+    title: "The final pitches are live!",
+    body: "The pitches are live on our youtube channel!",
+    link: "https://youtu.be/OsZHCKiAQoY",
   },
 ];
 
