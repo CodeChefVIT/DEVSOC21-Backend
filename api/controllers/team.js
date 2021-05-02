@@ -97,6 +97,12 @@ exports.join = async (req, res) => {
       message: "Team not found",
     });
   } else {
+    if(team.submission.finalDescription !== "" || team.submission.finalDescription !== null || team.submission.description !== null || team.submission.description !== ""){
+      return res.status(409).json({
+        success: false,
+        message: "Can't join, submitted",
+      });
+    }
     User.findById(userId)
       .then((user) => {
         if (user.inTeam) {
@@ -566,9 +572,7 @@ exports.saveIdea = async (req, res) => {
 exports.finalSubmission = async (req, res) => {
   const { userId } = req.user;
   const {
-    finalName,
     finalDescription,
-    finalTrack,
     techStack,
     githubLink,
     videolink,
@@ -581,6 +585,12 @@ exports.finalSubmission = async (req, res) => {
     });
   } else {
     let team = await Team.findById(user.team);
+    if(team.submission.status !== "Shortlisted For Round 2" && team.submission.status !== "Project Submitted"){
+      return res.status(409).json({
+        success: false,
+        message: "User not found",
+      });
+    }
     if (!team) {
       res.status(401).json({
         success: false,
@@ -589,9 +599,7 @@ exports.finalSubmission = async (req, res) => {
     } else {
       team = team.toObject();
       submission = team.submission;
-      submission.finalName = finalName;
       submission.finalDescription = finalDescription;
-      submission.finalTrack = finalTrack;
       submission.techStack = techStack;
       submission.githubLink = githubLink;
       submission.videolink = videolink;
