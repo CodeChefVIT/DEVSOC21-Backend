@@ -8,20 +8,6 @@ const { OTP } = require('../../config/sendOTP');
 
 let announcements = [
   {
-    title: "Juspay speaker session!",
-    body: "Juspay speaker session will be live at 5 PM. Be sure to tune in!",
-    link: "bit.ly/CCJuspay"
-  },
-  {
-    title: "Submissions are now live",
-    body: "Please submit your ideas",
-    link: "https://hackwith.codechefvit.com/app/submission",
-  },
-  {
-    title: "Join our discord",
-    body: "Please join our discord to get the latest updates",
-  },
-  {
     title: "Welcome to DEVSOC'21",
     body: "We are thrilled to have you on board with us at DEVSOC'21",
     link: "https://hackwith.codechefvit.com",
