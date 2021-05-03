@@ -3,10 +3,15 @@ var otpGenerator = require("otp-generator");
 const { sendEmail } = require("../../config/emailScript");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
-const ReviewOne = require("../models/ReviewOne");
-const { OTP } = require('../../config/sendOTP')
+const Chess = require("../models/Chess");
+const { OTP } = require('../../config/sendOTP');
 
 let announcements = [
+  {
+    title: "Juspay speaker session!",
+    body: "Juspay speaker session will be live at 5 PM. Be sure to tune in!",
+    link: "bit.ly/CCJuspay"
+  },
   {
     title: "Submissions are now live",
     body: "Please submit your ideas",
@@ -32,53 +37,39 @@ function convertTZ(date) {
 }
 
 const form = {
-  title: "Review One Form",
+  title: "Chess Entry Form",
   questions: [
     {
-      question: "team name",
+      question: "Name",
       type: "textfield",
       value: null,
-      key: "teamName",
+      key: "name",
     },
     {
-      question: "Leader Name",
+      question: "Mobile Number",
       type: "textfield",
       value: null,
-      key: "leaderName",
+      key: "number",
     },
     {
-      question: "Leader Number",
+      question: "Email",
       type: "textfield",
       value: null,
-      key: "leaderNumber",
+      key: "email",
     },
     {
-      question: "Track",
-      type: "dropdown",
-      dropdownOptions: [
-        "track 1",
-        "track 2",
-        "track 3",
-        "track 4",
-        "track 5",
-        "track 6",
-      ],
+      question: "Discord ID",
+      type: "textfield",
       value: null,
-      key: "track",
+      key: "discordID",
     },
     {
-      question: "extra prizes",
-      type: "checkbox",
-      checkboxOptions: [
-        "Extra prize 1",
-        "Extra prize 2",
-        "Extra prize 3",
-        "Extra prize 4",
-        "Extra prize 5",
-      ],
-      value: [],
-      key: "extraPrizes",
+      question: "Lichess ID",
+      type: "textfield",
+      value: null,
+      key: "liChessId",
     },
+
   ],
 };
 
@@ -478,12 +469,12 @@ exports.submitform = async (req, res) => {
   await User.updateOne({ _id: userId }, { formSubmitTimeExpiry: expiryDate })
     .then(async (result) => {
       var id = mongoose.Types.ObjectId(userId);
-      const reviewOne = await ReviewOne.find({ userId: id });
-      console.log(reviewOne);
-      if (reviewOne.length >= 1) {
-        await ReviewOne.deleteMany({ userId: id });
+      const chess = await Chess.find({ userId: id });
+      console.log(chess);
+      if (chess.length >= 1) {
+        await Chess.deleteMany({ userId: id });
       }
-      const form = new ReviewOne(object);
+      const form = new Chess(object);
       await form
         .save()
         .then((result) => {
