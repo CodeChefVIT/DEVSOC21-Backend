@@ -76,7 +76,7 @@ router.get("/google", async (req, res) => {
       .save()
       .then((user) => {
         console.log("hllo")
-        res.redirect(`${process.env.REDIRECT_FRONTEND}${token}`)
+        res.redirect(`${process.env.REDIRECT_FRONTEND}?token=${token}`)
       })
       .catch((err) => {
         res.status(200).json({
