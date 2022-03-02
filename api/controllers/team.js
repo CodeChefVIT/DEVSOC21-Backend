@@ -97,7 +97,13 @@ exports.join = async (req, res) => {
       message: "Team not found",
     });
   } else {
-    if(team.submission.finalDescription !== "" || team.submission.finalDescription !== null || team.submission.description !== null || team.submission.description !== ""){
+    // console.log(team.submission.finalDescription);
+    if (
+      // team.submission.finalDescription !== "" ||
+      team.submission.finalDescription !== null ||
+      team.submission.description !== null 
+      // team.submission.description !== ""
+    ) {
       return res.status(409).json({
         success: false,
         message: "Can't join, submitted",
@@ -571,12 +577,7 @@ exports.saveIdea = async (req, res) => {
 
 exports.finalSubmission = async (req, res) => {
   const { userId } = req.user;
-  const {
-    finalDescription,
-    techStack,
-    githubLink,
-    videolink,
-  } = req.body;
+  const { finalDescription, techStack, githubLink, videolink } = req.body;
   const user = await User.findById(userId);
   if (!user) {
     return res.status(404).json({
@@ -585,7 +586,10 @@ exports.finalSubmission = async (req, res) => {
     });
   } else {
     let team = await Team.findById(user.team);
-    if(team.submission.status !== "Shortlisted For Round 2" && team.submission.status !== "Project Submitted"){
+    if (
+      team.submission.status !== "Shortlisted For Round 2" &&
+      team.submission.status !== "Project Submitted"
+    ) {
       return res.status(409).json({
         success: false,
         message: "User not found",
@@ -603,13 +607,13 @@ exports.finalSubmission = async (req, res) => {
       submission.techStack = techStack;
       submission.githubLink = githubLink;
       submission.videolink = videolink;
-      submission.status = "Project Submitted"
+      submission.status = "Project Submitted";
       await Team.updateOne(
         {
           _id: user.team,
         },
         {
-          submission
+          submission,
         }
       )
         .then((result) => {
