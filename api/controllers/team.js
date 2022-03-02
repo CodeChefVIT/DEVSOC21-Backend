@@ -97,7 +97,7 @@ exports.join = async (req, res) => {
       message: "Team not found",
     });
   } else {
-    // console.log(team.submission.finalDescription);
+    console.log(team.submission);
     if (
       // team.submission.finalDescription !== "" ||
       team.submission.finalDescription !== null ||
