@@ -99,7 +99,7 @@ exports.join = async (req, res) => {
   } else {
     console.log(team.submission);
     if (
-      team.submission.submission !== "" ||
+      team.submission.description !== "" ||
       team.finalised == true 
     ) {
       return res.status(409).json({
