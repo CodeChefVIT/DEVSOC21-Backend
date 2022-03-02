@@ -100,11 +100,11 @@ exports.join = async (req, res) => {
     console.log(team.submission);
     if (
       // team.submission.finalDescription !== "" ||
-      team.submission.finalDescription !== null
+      team.finalised == true 
     ) {
       return res.status(409).json({
         success: false,
-        message: "Can't join, submitted",
+        message: "Can't join, finalised",
       });
     }
     User.findById(userId)
