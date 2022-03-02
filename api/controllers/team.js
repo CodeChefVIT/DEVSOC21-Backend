@@ -100,9 +100,7 @@ exports.join = async (req, res) => {
     console.log(team.submission);
     if (
       // team.submission.finalDescription !== "" ||
-      team.submission.finalDescription !== null ||
-      team.submission.description !== null 
-      // team.submission.description !== ""
+      team.submission.finalDescription !== null
     ) {
       return res.status(409).json({
         success: false,
