@@ -1,0 +1,20 @@
+{
+    "apps": [
+      {
+        "exec_mode": "fork_mode",
+        "script": "./app.js",
+        "name": "0",
+        "env": {
+          "PORT": 3000
+        }
+      },
+      {
+        "exec_mode": "fork_mode",
+        "script": "./app.js",
+        "name": "1",
+        "env": {
+          "PORT": 3001
+        }
+      }
+    ]
+  }

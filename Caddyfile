@@ -1,0 +1,5 @@
+:80 {
+	reverse_proxy localhost:3000 localhost:3001 {
+	lb_policy round_robin
+	}
+}
