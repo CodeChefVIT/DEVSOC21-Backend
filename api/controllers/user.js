@@ -181,7 +181,7 @@ exports.sendInvite = async (req, res) => {
           await sendEmail(
             process.env.SES_EMAIL,
             inviteEmail,
-            `Team join invite by ${req.user.name} | DEVSOC 21`,
+            `Team join invite by ${req.user.name} | DEVSOC 22`,
             html
           );
           return res.status(200).json({
@@ -212,7 +212,7 @@ exports.sendInvite = async (req, res) => {
           await sendEmail(
             process.env.SES_EMAIL,
             inviteEmail,
-            `Team join invite by ${req.user.name} | DEVSOC 21`,
+            `Team join invite by ${req.user.name} | DEVSOC 22`,
             html
           );
           return res.status(200).json({
