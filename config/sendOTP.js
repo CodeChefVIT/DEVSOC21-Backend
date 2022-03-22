@@ -251,7 +251,7 @@ exports.OTP = (teamCode) => {
                                                         <td style="width:600px;"> <a href="#" target="_self">
 
                                                                 <img height="auto"
-                                                                    src="https://i.ibb.co/gSLMkh8/Footer.png"
+                                                                    src="https://i.ibb.co/2S1r4gN/Footer.png"
                                                                     style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;"
                                                                     width="600" />
 
