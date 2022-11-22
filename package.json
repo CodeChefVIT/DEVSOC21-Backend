@@ -41,6 +41,6 @@
     "nodemailer": "^6.6.1",
     "otp-generator": "^3.0.0",
     "request": "^2.88.2",
-    "socket.io": "^4.4.1"
+    "socket.io": "^4.5.3"
   }
 }
